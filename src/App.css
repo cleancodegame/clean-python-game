@@ -1,0 +1,186 @@
+/* Set a global font and background color for the entire application */
+body {
+  font-family: 'Cascadia Code', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #141414;
+  color: #d4d4d4;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #252526;
+  color: #d4d4d4;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  color: #d4d4d4;
+  padding-top: 3px;
+  padding-left: 15px;
+  font-size: 18px; /* Lower the size of the font in the Title */
+  display: flex;
+  align-items: center;
+}
+
+.sidebar h2 img {
+  margin-right: 10px; /* Leave space for a little image beside the Title */
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0 20px;
+  flex-grow: 1;
+}
+
+.sidebar ul li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar ul li.folder {
+  font-weight: bold;
+}
+
+
+.folder-icon {
+  display: inline-block;
+  rotate: 270deg;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.folder-icon.open {
+  transform: rotate(90deg);
+}
+
+.sidebar ul .task-list {
+  list-style-type: none;
+  padding: 0;
+  padding-left: 30px; /* Indentation for tasks */
+}
+
+.sidebar ul .task-list li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.sidebar ul .task-list li:hover {
+  background-color: #37373d;
+}
+
+.sidebar ul .task-list li.completed {
+  color: #B8F171; /* Color for completed tasks */
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  height: 100vh;
+}
+
+.header-bar {
+  background-color: #252526;
+  display: flex;
+  align-items: center;
+}
+
+.file-tab {
+  background-color: #333;
+  color: #fff;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 14px; /* Reduce font size */
+}
+
+.file-tab .close-button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.code-editor {
+  background-color: #1e1e1e;
+  padding: 20px;
+  white-space: pre-wrap; /* Preserve whitespace */
+  font-family: 'Cascadia Code', 'Courier New', Courier, monospace; /* Use Cascadia Code font */
+  flex: 1;
+  overflow-y: auto;
+  color: #d4d4d4;
+  line-height: 1.6; /* Add some space between the lines of text in the code editor */
+}
+
+.variable {
+  color: inherit;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.variable:hover {
+  text-decoration: none;
+}
+
+.terminal {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 30px;
+  font-family: 'Cascadia Code', 'Courier New', Courier, monospace;
+  font-size: 16px;
+  height: 150px;
+  border-top: 1px solid #3c3c3c;
+  border-bottom: 1px solid #3c3c3c; /* Add separating border between the taskbar and the terminal */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+}
+
+
+.terminal .close-button {
+  align-self: flex-end; /* Align close button to the right */
+  background: none;
+  border: none;
+  color: #d4d4d4;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.terminal div {
+  margin-bottom: 50px; /* Space between congrats message and button */
+}
+
+button {
+  background-color: #5188DA;
+
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #005f99;
+}

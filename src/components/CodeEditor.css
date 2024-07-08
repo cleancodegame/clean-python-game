@@ -1,0 +1,30 @@
+.code-editor {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Cascadia Code', 'Courier New', Courier, monospace;
+    padding: 20px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+  
+  .code-line {
+    display: flex;
+  }
+  
+  .line-number {
+    display: inline-block;
+    width: 30px; /* Adjust the width as needed */
+    text-align: right;
+    padding-right: 20px;
+    color: #858585;
+  }
+  
+  .variable {
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .variable:hover {
+    text-decoration: none;
+  }
+  

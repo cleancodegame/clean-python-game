@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
@@ -175,25 +175,44 @@ class ConfusingNames:
   ];
 
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(0);
-  const [code, setCode] = useState(tasks[0].code);
+  const [code, setCode] = useState(tasks[0].code.trim());
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].variables);
   const [renamed, setRenamed] = useState({});
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
-  const [showTerminal, setShowTerminal] = useState(true);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [terminalMessage, setTerminalMessage] = useState('');
+  const [terminalMessageColor, setTerminalMessageColor] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const [wrongClickCount, setWrongClickCount] = useState(0);
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    if (disabled && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [disabled, timer]);
 
   const handleTaskSelect = (index) => {
     setSelectedTaskIndex(index);
-    setCode(tasks[index].code);
+    setCode(tasks[index].code.trim());
     setRenamedVariables(tasks[index].variables);
     setCompleted(false);
     setRenamed({});
     setShowTerminal(false);
+    setDisabled(false);
+    setWrongClickCount(0);
   };
 
   const handleVariableClick = (oldName) => {
-    const newName = renamedVariables[oldName];
-    if (newName) {
+    if (disabled) return;
+
+    if (oldName && renamedVariables[oldName]) {
+      const newName = renamedVariables[oldName];
       const newCode = code.replace(new RegExp(`\\b${oldName}\\b`, 'g'), newName);
       setCode(newCode);
       setRenamed((prev) => ({ ...prev, [oldName]: true }));
@@ -202,7 +221,32 @@ class ConfusingNames:
       if (allRenamed) {
         setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
+        setTerminalMessage('Success: All variables have been renamed!');
+        setTerminalMessageColor('green');
         setShowTerminal(true);
+      }
+    } else {
+      setTerminalMessage('Error: You clicked on the wrong place.');
+      setTerminalMessageColor('yellow');
+      setShowTerminal(true);
+      setDisabled(true);
+      setTimer(5);
+      setWrongClickCount((prev) => prev + 1);
+
+      setTimeout(() => {
+        setDisabled(false);
+        setShowTerminal(true);
+      }, 5000);
+
+      if (wrongClickCount + 1 >= 5) {
+        setTimeout(() => {
+          setTerminalMessage('You clicked wrong too many times! Restarting the game...');
+          setTerminalMessageColor('red');
+          setShowTerminal(true);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        }, 5100);
       }
     }
   };
@@ -228,20 +272,21 @@ class ConfusingNames:
       <Sidebar tasks={tasks.map((task, index) => ({
         ...task,
         completed: completedTasks.includes(index)
-      }))} onSelectTask={handleTaskSelect} />
+      }))} onSelectTask={() => {}} />
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
             <span>{tasks[selectedTaskIndex].fileName}</span>
-            <button className="close-button" onClick={handleCloseFile}>x</button>
           </div>
         </div>
-        <CodeEditor code={code} onVariableClick={handleVariableClick} />
+        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>
-            <div style={{color: '#B8F171'}}>Congratulations! You have managed to find all the problems with the code.</div>
-            <button onClick={handleNextTask}>Next Task</button>
+            <div style={{ color: terminalMessageColor }}>{terminalMessage}</div>
+            {disabled && <div>Try again in {timer} seconds...</div>}
+            {wrongClickCount > 0 && <div>Mistakes: {wrongClickCount}</div>}
+            {completed && <button onClick={handleNextTask}>Next Task</button>}
           </div>
         )}
       </div>

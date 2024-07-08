@@ -25,8 +25,8 @@ body {
 }
 
 .sidebar h2 {
+  height: 20px;
   color: #d4d4d4;
-  padding-top: 3px;
   padding-left: 15px;
   font-size: 18px; /* Lower the size of the font in the Title */
   display: flex;
@@ -103,9 +103,11 @@ body {
 }
 
 .file-tab {
+  height: 40px;
   background-color: #333;
   color: #fff;
-  padding-left: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
   display: flex;
   align-items: center;
   font-size: 14px; /* Reduce font size */
@@ -144,10 +146,10 @@ body {
 .terminal {
   background-color: #1e1e1e;
   color: #d4d4d4;
-  padding: 30px;
+  padding-left: 30px;
   font-family: 'Cascadia Code', 'Courier New', Courier, monospace;
   font-size: 16px;
-  height: 150px;
+  height: 185px;
   border-top: 1px solid #3c3c3c;
   border-bottom: 1px solid #3c3c3c; /* Add separating border between the taskbar and the terminal */
   overflow-y: auto;
@@ -167,7 +169,7 @@ body {
 }
 
 .terminal div {
-  margin-bottom: 50px; /* Space between congrats message and button */
+  margin-bottom: 20px; /* Space between congrats message and button */
 }
 
 button {

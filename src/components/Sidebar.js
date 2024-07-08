@@ -23,7 +23,6 @@ const Sidebar = ({ tasks, onSelectTask }) => {
             {tasks.map((task, index) => (
               <li
                 key={index}
-                onClick={() => onSelectTask(index)}
                 className={task.completed ? 'completed' : ''}
               >
                 {task.title}

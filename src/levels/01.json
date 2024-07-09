@@ -1,0 +1,11 @@
+{
+    "title": "Welcome Level",
+    "bugs": [
+        {
+            "error": "BAD_varIaBlE_naME",
+            "fix": "text",
+            "descripttion": "Obviously bad name"
+        }
+    ]
+}
+

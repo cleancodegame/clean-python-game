@@ -1,0 +1,13 @@
+{
+    "title": "No boolean flags",
+    "bugs": [
+        {
+            "another_bad_name": "name"
+        },
+        {
+            "error": "uppercase",
+            "descripttion": "Replace bool flags with two different functions"
+        }
+    ]
+}
+

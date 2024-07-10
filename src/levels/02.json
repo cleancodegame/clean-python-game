@@ -8,6 +8,21 @@
             "error": "uppercase",
             "descripttion": "Replace bool flags with two different functions"
         }
+    ],
+    "code": [
+        "# Level 2",
+        {
+            "error": "uppercase",
+            "initial": "def transform...",
+            "fixed": "def uppercase..."
+        },
+        "print(\"Hello\")...",
+        {
+            "error": "uppercase",
+            "initial": "print(transform(another_bad_name, True))",
+            "fixed": "print(uppercase(another_bad_name))"
+        },
+        "print(\"1213212\")"
     ]
 }
 

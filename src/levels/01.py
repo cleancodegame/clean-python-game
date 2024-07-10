@@ -6,16 +6,3 @@
 def hello():
     BAD_varIaBlE_naME = "Hello world!"
     print(BAD_varIaBlE_naME)
-
-'''
-{
-    "title": "Welcome Level",
-    "bugs": [
-        {
-            "error": "BAD_varIaBlE_naME",
-            "fix": "text",
-            "descripttion": "Obviously bad name"
-        }
-    ]
-}
-'''

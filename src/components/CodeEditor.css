@@ -1,3 +1,5 @@
+@import '~prismjs/themes/prism-tomorrow.css';
+
 .code-editor {
   background-color: #1e1e1e;
   color: #d4d4d4;

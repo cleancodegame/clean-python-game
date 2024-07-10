@@ -1,26 +1,48 @@
 import React from 'react';
+import MonacoEditor from '@monaco-editor/react';
 import './CodeEditor.css';
 
 const CodeEditor = ({ code, onVariableClick, disabled }) => {
-  const handleClick = (e) => {
-    if (disabled) return;
-    if (e.target.classList.contains('variable')) {
-      onVariableClick(e.target.textContent);
-    } else {
-      onVariableClick(null); // Handle wrong click
-    }
+  const handleEditorDidMount = (editor) => {
+    editor.onMouseDown((e) => {
+      if (disabled) return;
+
+      const position = e.target.position;
+      if (!position) {
+        onVariableClick(null); // Handle wrong click
+        return;
+      }
+
+      const word = editor.getModel().getWordAtPosition(position);
+      if (word) {
+        const variableName = editor.getModel().getValueInRange({
+          startLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endLineNumber: position.lineNumber,
+          endColumn: word.endColumn,
+        });
+
+        onVariableClick(variableName);
+      } else {
+        onVariableClick(null); // Handle wrong click
+      }
+    });
   };
 
-  const lines = code.trim().split('\n');
-
   return (
-    <div className={`code-editor ${disabled ? 'disabled' : ''}`} onClick={handleClick}>
-      {lines.map((line, index) => (
-        <div key={index} className="code-line">
-          <span className="line-number">{index + 1}</span>
-          <span dangerouslySetInnerHTML={{ __html: line.replace(/\b(\w+)\b/g, '<span class="variable">$1</span>') }} />
-        </div>
-      ))}
+    <div className={`code-editor ${disabled ? 'disabled' : ''}`}>
+      <MonacoEditor
+        theme="vs-dark"
+        height="90vh"
+        language="python"
+        value={code}
+        options={{
+          readOnly: true, // Make the editor read-only
+          minimap: { enabled: false },
+          scrollbar: { vertical: 'hidden' },
+        }}
+        editorDidMount={handleEditorDidMount}
+      />
     </div>
   );
 };

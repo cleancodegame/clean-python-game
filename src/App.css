@@ -28,7 +28,7 @@ body {
   height: 20px;
   color: #d4d4d4;
   padding-left: 15px;
-  font-size: 18px; /* Lower the size of the font in the Title */
+  font-size: 18px;
   display: flex;
   align-items: center;
 }
@@ -71,7 +71,7 @@ body {
 .sidebar ul .task-list {
   list-style-type: none;
   padding: 0;
-  padding-left: 30px; /* Indentation for tasks */
+  padding-left: 30px; 
 }
 
 .sidebar ul .task-list li {
@@ -125,7 +125,7 @@ body {
 .code-editor {
   background-color: #1e1e1e;
   padding: 20px;
-  white-space: pre-wrap; /* Preserve whitespace */
+  white-space: pre-wrap;
   font-family: 'Cascadia Code', 'Courier New', Courier, monospace; /* Use Cascadia Code font */
   flex: 1;
   overflow-y: auto;
@@ -155,7 +155,7 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
+  align-items: flex-start;
 }
 
 

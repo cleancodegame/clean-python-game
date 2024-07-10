@@ -230,13 +230,13 @@ class ConfusingNames:
       setTerminalMessageColor('yellow');
       setShowTerminal(true);
       setDisabled(true);
-      setTimer(5);
+      setTimer(3);
       setWrongClickCount((prev) => prev + 1);
 
       setTimeout(() => {
         setDisabled(false);
         setShowTerminal(true);
-      }, 5000);
+      }, 3000);
 
       if (wrongClickCount + 1 >= 5) {
         setTimeout(() => {
@@ -257,10 +257,6 @@ class ConfusingNames:
     } else {
       alert('You have completed all the tasks!');
     }
-  };
-
-  const handleCloseFile = () => {
-    alert('Closing file is not implemented yet.');
   };
 
   const handleCloseTerminal = () => {

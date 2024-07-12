@@ -11,7 +11,7 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
     }
   };
 
-  //const lines = code.trim().split('\n');
+  const lines = code.trim().split('\n');
 
   return (
     <div className={`code-editor ${disabled ? 'disabled' : ''}`} onClick={handleClick}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import MonacoEditor from '@monaco-editor/react';
-import './CodeEditor.css';
+import './CodeEditor.css'; // Ensure you include the CSS file
 
 const CodeEditor = ({ code, onVariableClick, disabled }) => {
   const handleEditorDidMount = (editor) => {
@@ -23,10 +23,16 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
         });
 
         onVariableClick(variableName);
-      } else {
-        onVariableClick(null); // Handle wrong click
+        e.preventDefault(); // Prevent default text selection behavior
       }
     });
+  };
+
+  const options = {
+    readOnly: true, // Make the editor read-only
+    renderLineHighlight: 'none', // Remove line highlight
+    selectOnLineNumbers: false, // Prevent selection on line numbers
+    cursorStyle: 'line', // Set cursor style
   };
 
   return (
@@ -34,13 +40,9 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
       <MonacoEditor
         theme="vs-dark"
         height="90vh"
-        language="python"
+        language="python" // Set the language to Python
         value={code}
-        options={{
-          readOnly: true, // Make the editor read-only
-          minimap: { enabled: false },
-          scrollbar: { vertical: 'hidden' },
-        }}
+        options={options}
         editorDidMount={handleEditorDidMount}
       />
     </div>

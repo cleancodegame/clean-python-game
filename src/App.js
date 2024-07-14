@@ -268,7 +268,7 @@ class ConfusingNames:
       <Sidebar tasks={tasks.map((task, index) => ({
         ...task,
         completed: completedTasks.includes(index)
-      }))} onSelectTask={() => {}} />
+      }))} onSelectTask={handleTaskSelect} />
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">

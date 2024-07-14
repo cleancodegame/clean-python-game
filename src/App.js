@@ -4,7 +4,40 @@ import CodeEditor from './components/CodeEditor';
 import './App.css';
 
 const App = () => {
-  const initialTasks = [
+  const tasks = [
+    {
+      title: 'Task 1',
+      fileName: 'task1.py',
+      "bugs": {
+            "another_bad_name": "name",
+            "uppercase": "uppercase"
+      },
+    "code": [
+        "# Level 2",
+        {
+            "error": "uppercase",
+            "initial": `def transform(text, uppercase):
+    if uppercase:
+        return text.upper()
+    else:
+        return text.lower()
+            `,
+            "fixed": `
+            def uppercase(text):
+    return text.upper()
+
+def lowercase(text):
+    return text.lower()`
+        },
+        "print(\"Hello\")",
+        {
+            "error": "uppercase",
+            "initial": "print(transform(another_bad_name, True))",
+            "fixed": "print(uppercase(another_bad_name))"
+        },
+        "print(\"1213212\")"
+    ]
+    }/*,
     {
       title: 'Task 1',
       fileName: 'task1.py',
@@ -106,7 +139,7 @@ class BadClassName:
     self.param2 = param2
 
   def calculate(self):
-    return self.param1 + her param2
+    return self.param1 + self.param2
 `,
       variables: {
         BadClassName: 'Addition',
@@ -177,7 +210,8 @@ class IncorrectNames:
       fileName: 'task9.py',
       code: `
 def messy_code(i, j, k):
-    return i + j + k
+    return
+i + j + k
 `,
       variables: {
         messy_code: 'sum',
@@ -376,11 +410,6 @@ print(pi * r**2)
     }
   }, [disabled, timer]);
 
-  useEffect(() => {
-    setCurrentCode(tasks[selectedTaskIndex].code);
-    setRenamedVariables({});
-  }, [selectedTaskIndex, tasks]);
-
   const handleTaskSelect = (index) => {
     setSelectedTaskIndex(index);
     setCode(tasks[index].code);
@@ -432,7 +461,7 @@ print(pi * r**2)
 
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(false);
+        setShowTerminal(true);
       }, 3000);
 
       if (wrongClickCount + 1 >= 5) {
@@ -465,21 +494,21 @@ print(pi * r**2)
       <Sidebar tasks={tasks.map((task, index) => ({
         ...task,
         completed: completedTasks.includes(index)
-      }))} onSelectTask={handleTaskSelect} />
+      }))} onSelectTask={() => {}} />
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={currentCode} onVariableClick={handleVariableClick} disabled={disabled} />
+        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>
             <div style={{ color: terminalMessageColor }}>{terminalMessage}</div>
             {disabled && <div>Try again in {timer} seconds...</div>}
             {wrongClickCount > 0 && <div>Mistakes: {wrongClickCount}</div>}
-            {completedTasks.includes(selectedTaskIndex) && <button onClick={handleNextTask}>Next Task</button>}
+            {completed && <button onClick={handleNextTask}>Next Task</button>}
           </div>
         )}
       </div>

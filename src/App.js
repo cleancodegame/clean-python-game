@@ -4,7 +4,7 @@ import CodeEditor from './components/CodeEditor';
 import './App.css';
 
 const App = () => {
-  const tasks = [
+  const initialTasks = [
     {
       title: 'Task 1',
       fileName: 'task1.py',
@@ -106,7 +106,7 @@ class BadClassName:
     self.param2 = param2
 
   def calculate(self):
-    return self.param1 + self.param2
+    return self.param1 + her param2
 `,
       variables: {
         BadClassName: 'Addition',
@@ -177,8 +177,7 @@ class IncorrectNames:
       fileName: 'task9.py',
       code: `
 def messy_code(i, j, k):
-    return
-i + j + k
+    return i + j + k
 `,
       variables: {
         messy_code: 'sum',
@@ -377,6 +376,11 @@ print(pi * r**2)
     }
   }, [disabled, timer]);
 
+  useEffect(() => {
+    setCurrentCode(tasks[selectedTaskIndex].code);
+    setRenamedVariables({});
+  }, [selectedTaskIndex, tasks]);
+
   const handleTaskSelect = (index) => {
     setSelectedTaskIndex(index);
     setCode(tasks[index].code);
@@ -428,7 +432,7 @@ print(pi * r**2)
 
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(true);
+        setShowTerminal(false);
       }, 3000);
 
       if (wrongClickCount + 1 >= 5) {
@@ -468,14 +472,14 @@ print(pi * r**2)
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} />
+        <CodeEditor code={currentCode} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>
             <div style={{ color: terminalMessageColor }}>{terminalMessage}</div>
             {disabled && <div>Try again in {timer} seconds...</div>}
             {wrongClickCount > 0 && <div>Mistakes: {wrongClickCount}</div>}
-            {completed && <button onClick={handleNextTask}>Next Task</button>}
+            {completedTasks.includes(selectedTaskIndex) && <button onClick={handleNextTask}>Next Task</button>}
           </div>
         )}
       </div>

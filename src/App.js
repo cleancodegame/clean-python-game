@@ -4,7 +4,7 @@ import CodeEditor from './components/CodeEditor';
 import './App.css';
 
 const App = () => {
-  const tasks = [
+  const initialTasks = [
     {
       title: 'Task 1',
       fileName: 'task1.py',
@@ -73,7 +73,7 @@ class BadClassName:
     self.param2 = param2
 
   def calculate(self):
-    return self.param1 + self.param2
+    return self.param1 + her param2
 `,
       variables: {
         BadClassName: 'Addition',
@@ -144,8 +144,7 @@ class IncorrectNames:
       fileName: 'task9.py',
       code: `
 def messy_code(i, j, k):
-    return
-i + j + k
+    return i + j + k
 `,
       variables: {
         messy_code: 'sum',
@@ -174,11 +173,10 @@ class ConfusingNames:
     }
   ];
 
+  const [tasks, setTasks] = useState(initialTasks);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(0);
-  const [code, setCode] = useState(tasks[0].code.trim());
-  const [renamedVariables, setRenamedVariables] = useState(tasks[0].variables);
-  const [renamed, setRenamed] = useState({});
-  const [completed, setCompleted] = useState(false);
+  const [currentCode, setCurrentCode] = useState(tasks[0].code);
+  const [renamedVariables, setRenamedVariables] = useState({});
   const [completedTasks, setCompletedTasks] = useState([]);
   const [showTerminal, setShowTerminal] = useState(false);
   const [terminalMessage, setTerminalMessage] = useState('');
@@ -197,12 +195,13 @@ class ConfusingNames:
     }
   }, [disabled, timer]);
 
+  useEffect(() => {
+    setCurrentCode(tasks[selectedTaskIndex].code);
+    setRenamedVariables({});
+  }, [selectedTaskIndex, tasks]);
+
   const handleTaskSelect = (index) => {
     setSelectedTaskIndex(index);
-    setCode(tasks[index].code.trim());
-    setRenamedVariables(tasks[index].variables);
-    setCompleted(false);
-    setRenamed({});
     setShowTerminal(false);
     setDisabled(false);
     setWrongClickCount(0);
@@ -211,15 +210,17 @@ class ConfusingNames:
   const handleVariableClick = (oldName) => {
     if (disabled) return;
 
-    if (oldName && renamedVariables[oldName]) {
-      const newName = renamedVariables[oldName];
-      const newCode = code.replace(new RegExp(`\\b${oldName}\\b`, 'g'), newName);
-      setCode(newCode);
-      setRenamed((prev) => ({ ...prev, [oldName]: true }));
+    const task = tasks[selectedTaskIndex];
+    const variables = task.variables;
 
-      const allRenamed = Object.keys(renamedVariables).every((variable) => newCode.includes(renamedVariables[variable]));
+    if (variables[oldName]) {
+      const newName = variables[oldName];
+      const newCode = currentCode.replace(new RegExp(`\\b${oldName}\\b`, 'g'), newName);
+      setCurrentCode(newCode);
+      setRenamedVariables((prev) => ({ ...prev, [oldName]: true }));
+
+      const allRenamed = Object.keys(variables).every((variable) => newCode.includes(variables[variable]));
       if (allRenamed) {
-        setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
         setTerminalMessageColor('green');
@@ -235,7 +236,7 @@ class ConfusingNames:
 
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(true);
+        setShowTerminal(false);
       }, 3000);
 
       if (wrongClickCount + 1 >= 5) {
@@ -275,14 +276,14 @@ class ConfusingNames:
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} />
+        <CodeEditor code={currentCode} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>
             <div style={{ color: terminalMessageColor }}>{terminalMessage}</div>
             {disabled && <div>Try again in {timer} seconds...</div>}
             {wrongClickCount > 0 && <div>Mistakes: {wrongClickCount}</div>}
-            {completed && <button onClick={handleNextTask}>Next Task</button>}
+            {completedTasks.includes(selectedTaskIndex) && <button onClick={handleNextTask}>Next Task</button>}
           </div>
         )}
       </div>

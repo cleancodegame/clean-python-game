@@ -3,16 +3,47 @@ import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
 
+let selectedTaskIndex = 0
+
 const App = () => {
   const tasks = [
     {
       title: 'Task 1',
       fileName: 'task1.py',
       "bugs": {
+        "LongClassName": "ClassName",
+        "x": "posX",
+        "y": "posY",
+        "other_point" : "otherPoint"
+      },
+      "number": 4,
+      "code": [
+"# Welcome to the Clean Code Game! Your task is to rename the badly named variables to more meaningful names.",
+"# Click on the variable names to rename them. When all variables are renamed, you can proceed to the next task.",
+"class LongClassName:",
+"  def __init__(self, x, y):",
+"    self.x = x",
+"    self.y = y",
+
+"  def coordinates(self):",
+"    return (self.x, self.y)",
+
+"  def distancefrompointAtoB(self, other_point):",
+"    dx = self.x - other_point.x",
+"    dy = self.y - other_point.y",
+"    distance = math.sqrt(dx**2 + dy**2)",
+"    return distance"
+  ]
+    },
+    {
+      title: 'Task 2',
+      fileName: 'task2.py',
+      "bugs": {
             "another_bad_name": "name",
             "uppercase": "uppercase"
       },
-    "code": [
+      "number": 2,
+      "code": [
         "# Level 2",
         {
             "error": "uppercase",
@@ -37,7 +68,8 @@ def lowercase(text):
         },
         "print(\"1213212\")"
     ]
-    }/*,
+    }
+    /*,
     {
       title: 'Task 1',
       fileName: 'task1.py',
@@ -74,8 +106,14 @@ def lowercase(text):
     {
       title: 'Task 1',
       fileName: 'task1.py',
-      code: `
-# Welcome to the Clean Code Game! Your task is to rename the badly named variables to more meaningful names.
+      "bugs": {
+        "VeryLongClassName": "ClassName",
+        "x": "posX",
+        "y": "posY",
+        "other_point" : "otherPoint"
+      }
+      "code": [`
+# Welcome to the Clean Code Game! Your task is to rename the badly named variables to more meaningful names."
 # Click on the variable names to rename them. When all variables are renamed, you can proceed to the next task.
 
 class VeryLongClassName:
@@ -91,13 +129,7 @@ class VeryLongClassName:
     dy = self.y - other_point.y
     distance = math.sqrt(dx**2 + dy**2)
     return distance
-`,
-      variables: {
-        VeryLongClassName: 'ClassName',
-        x: 'posX',
-        y: 'posY',
-        other_point: 'otherPoint'
-      }
+  `]
     },
     {
       title: 'Task 2',
@@ -374,22 +406,36 @@ print(pi * r**2)
 
   const [set, setOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
+  const [wrongClickCount, setWrongClickCount] = useState(0);
 
   function parseCode(code) {
+    console.log(set)
+    console.log(code)
+    console.log("WOW")
+    console.log(renamedVariables)
+    if (wrongClickCount >= 5) {
+      setTimeout(() => {
+        setTerminalMessage('You clicked wrong too many times! Restarting the game...');
+        setTerminalMessageColor('red');
+        setShowTerminal(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }, 5100);
+    }
     const map = code.map(item => (typeof item === 'string' ? item.trim() : (set.has(item.error) ? item.fixed.trim() : item.initial.trim())))
     let answer = ""
     for (const item of map) {
-      answer += item + '\n'
-    }
-    for (const item of set) {
-      answer = answer.replace(item, renamedVariables[item])
+      let line = item
+      for (const changedVariable of set) {
+        line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVariables[changedVariable])
+      }
+      answer += line + '\n'
     }
     return answer
   }
 
-  const [selectedTaskIndex, setSelectedTaskIndex] = useState(0);
   const [code, setCode] = useState(parseCode(tasks[0].code));
-  const [bugs, allTheBugs] = useState(Object.keys(tasks[0].bugs))
   const [renamed, setRenamed] = useState({});
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -397,7 +443,6 @@ print(pi * r**2)
   const [terminalMessage, setTerminalMessage] = useState('');
   const [terminalMessageColor, setTerminalMessageColor] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [wrongClickCount, setWrongClickCount] = useState(0);
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
@@ -411,40 +456,47 @@ print(pi * r**2)
   }, [disabled, timer]);
 
   const handleTaskSelect = (index) => {
-    setSelectedTaskIndex(index);
-    setCode(tasks[index].code);
-    setRenamedVariables(tasks[index].variables);
+    set.clear()
+    selectedTaskIndex = index
+    console.log(index)
+    setRenamedVariables(tasks[index].bugs);
+    console.log(tasks[index].bugs)
+    console.log("WHERE?")
+    console.log(renamedVariables)
     setCompleted(false);
     setRenamed({});
     setShowTerminal(false);
     setDisabled(false);
     setWrongClickCount(0);
+    console.log("CHECK")
+    console.log(renamedVariables)
   };
 
   const handleVariableClick = (oldName) => {
-    console.log(set)
     if (disabled) return;
-
-    if (oldName && renamedVariables[oldName] && !set.has(oldName)) {
-      const newName = renamedVariables[oldName];
+    console.log(wrongClickCount)
+    console.log(renamedVariables)
+    console.log(set)
+    console.log("HW")
+    console.log(tasks[selectedTaskIndex].code)
+    console.log(oldName)
+    console.log(renamedVariables[oldName])
+    console.log("HU")
+    if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !set.has(oldName)) {
+      const newName = tasks[selectedTaskIndex].bugs[oldName];
       if (oldName === newName) {
        const newSet = set.add(oldName)
        setOfFixedErrors(newSet)
-       const newCode = parseCode(tasks[0].code)
-       setCode(newCode);
        setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
       else {
-      const newCode = code.replace(new RegExp(`\\b${oldName}\\b`, 'g'), newName);
       const newSet = set.add(oldName)
       setOfFixedErrors(newSet)
-      console.log(oldName)
-      setCode(newCode);
       setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
-      console.log(set)
-      console.log(Object.keys(bugs).size)
-      if (set.size === 2) { //should be changed to the number of bugs
+      const newFinalCode = parseCode(tasks[selectedTaskIndex].code)
+      setCode(newFinalCode)
+      if (set.size === tasks[selectedTaskIndex].number) {
         setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
@@ -463,23 +515,13 @@ print(pi * r**2)
         setDisabled(false);
         setShowTerminal(true);
       }, 3000);
-
-      if (wrongClickCount + 1 >= 5) {
-        setTimeout(() => {
-          setTerminalMessage('You clicked wrong too many times! Restarting the game...');
-          setTerminalMessageColor('red');
-          setShowTerminal(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
-        }, 5100);
-      }
     }
   };
 
   const handleNextTask = () => {
     if (selectedTaskIndex < tasks.length - 1) {
       handleTaskSelect(selectedTaskIndex + 1);
+      console.log(code)
     } else {
       alert('You have completed all the tasks!');
     }
@@ -501,7 +543,7 @@ print(pi * r**2)
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} />
+        <CodeEditor code={parseCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

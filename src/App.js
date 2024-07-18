@@ -408,11 +408,42 @@ print(pi * r**2)
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
   const [wrongClickCount, setWrongClickCount] = useState(0);
 
+  function parserFromPython() { //easy version of parser
+    console.log("HOWW")
+  fetch('01.py')
+   .then(response => response.text())
+   .then((data) => {
+    const dataInArray = data.split("\n")
+    let finalCode = []
+    let bugs = {}
+    let prevWord = ""
+    let num = 0
+    for (const id in dataInArray) {
+      const item = dataInArray[id]
+      let words = item.split(" ")
+      if (words.includes("mistake")) {
+        prevWord = words[words.length - 1]
+      }
+      else if (words.includes("correct")) {
+        bugs[prevWord] = words[words.length - 1]
+        num = num + 1
+      }
+      else {
+        finalCode.push(item)
+      }
+    }
+    console.log( {
+      title: 'Task 1',
+      fileName: 'task1.py',
+      "bugs": bugs,
+      "number": num,
+      "code": finalCode
+    })
+  })
+  }
+
   function parseCode(code) {
-    console.log(set)
-    console.log(code)
-    console.log("WOW")
-    console.log(renamedVariables)
+    console.log(parserFromPython())
     if (wrongClickCount >= 5) {
       setTimeout(() => {
         setTerminalMessage('You clicked wrong too many times! Restarting the game...');

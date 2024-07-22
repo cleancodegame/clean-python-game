@@ -6,5 +6,5 @@
 def hello():
     BAD_varIaBlE_naME = "Hello world!"
     print(BAD_varIaBlE_naME)
-# mistake BAD_varIaBle_naME
-# correct greeting
+## mistake BAD_varIaBle_naME
+## correct greeting

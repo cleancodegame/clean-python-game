@@ -409,8 +409,7 @@ print(pi * r**2)
   const [wrongClickCount, setWrongClickCount] = useState(0);
 
   function parserFromPython() { //easy version of parser
-    console.log("HOWW")
-  fetch('01.py')
+  fetch('02.py')
    .then(response => response.text())
    .then((data) => {
     const dataInArray = data.split("\n")
@@ -418,23 +417,67 @@ print(pi * r**2)
     let bugs = {}
     let prevWord = ""
     let num = 0
+    let levelTitle = ""
+    let levelFilename = ""
+    let curInitialCode = ""
+    let curFixedCode = ""
+    let curMistaken = ""
+    let curFlag = 0
     for (const id in dataInArray) {
       const item = dataInArray[id]
       let words = item.split(" ")
-      if (words.includes("mistake")) {
+      if (words[0] !== "##" && curFlag === 0) {
+        finalCode.push(item)
+        continue
+      }
+      if (words[0] !== "##") {
+        if (curFlag === 1) {
+          curInitialCode += words.toString + "\n"
+        }
+        else {
+          curFixedCode += words.toString + "\n"
+        }
+        continue
+      }
+      if (id === 0) {
+        levelTitle = words[1]
+      }
+      else if (id === 1) {
+        levelFilename = words[1]
+      }
+      else if (words.includes("error")) {
+        curMistaken = words[2]
+        curFlag = 1
+      }
+      else if (words.includes("fix")) {
+        curFlag = 2
+      }
+      else if (words.includes("end")) {
+        bugs[curMistaken] = curMistaken
+        num = num + 1
+        finalCode.push({
+          "error": curMistaken,
+          "initial": curInitialCode,
+          "fixed": curFixedCode
+        })
+        curMistaken = ""
+        curFlag = 0
+        curInitialCode = ""
+        curFixedCode = ""
+      }
+      else if (words.includes("mistake")) {
         prevWord = words[words.length - 1]
+        curFlag = 1
       }
       else if (words.includes("correct")) {
         bugs[prevWord] = words[words.length - 1]
         num = num + 1
-      }
-      else {
-        finalCode.push(item)
+        curFlag = 0
       }
     }
     console.log( {
-      title: 'Task 1',
-      fileName: 'task1.py',
+      title: levelTitle,
+      fileName: levelFilename,
       "bugs": bugs,
       "number": num,
       "code": finalCode

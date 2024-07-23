@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import MonacoEditor, { loader } from '@monaco-editor/react';
 import './CodeEditor.css';
 
-const CodeEditor = ({ code, onVariableClick, disabled, isTyping, setIsTyping, bugs }) => {
-  const [displayedCode, setDisplayedCode] = useState('');
+const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
+  const [displayedCode, setDisplayedCode] = useState(code);
 
   useEffect(() => {
     loader.init().then((monaco) => {
@@ -14,25 +14,25 @@ const CodeEditor = ({ code, onVariableClick, disabled, isTyping, setIsTyping, bu
   useEffect(() => {
     if (isTyping) {
       let index = 0;
+      setDisplayedCode(''); // Clear the code before starting the animation
       const interval = setInterval(() => {
-        if (index < code.length) {
-          setDisplayedCode((prev) => prev + code[index]);
-          index++;
-        } else {
+        setDisplayedCode((prev) => prev + code[index]);
+        index++;
+        if (index >= code.length) {
           clearInterval(interval);
-          setIsTyping(false);
         }
-      }, 20); // Adjust timing as needed
+      }, 10); // Adjust timing as needed
 
       return () => clearInterval(interval);
     } else {
       setDisplayedCode(code);
     }
-  }, [code, isTyping, setIsTyping]);
+  }, [code, isTyping]);
 
   const handleEditorDidMount = (editor) => {
     editor.onMouseDown((e) => {
-      if (disabled || isTyping) return;
+      console.log("Mouse down");
+      if (disabled||isTyping) return;
 
       const position = e.target.position;
       if (!position) {
@@ -42,42 +42,34 @@ const CodeEditor = ({ code, onVariableClick, disabled, isTyping, setIsTyping, bu
 
       const word = editor.getModel().getWordAtPosition(position);
       if (word) {
+        console.log("Word");
         const variableName = editor.getModel().getValueInRange({
           startLineNumber: position.lineNumber,
           startColumn: word.startColumn,
           endLineNumber: position.lineNumber,
           endColumn: word.endColumn,
         });
-        if (Object.keys(bugs).includes(variableName)) {
-          onVariableClick(variableName);
-        } else {
-          onVariableClick(null); // Handle wrong click
-        }
+        onVariableClick(variableName);
       }
     });
 
     // Disable text selection
     editor.onDidChangeCursorSelection((e) => {
-      if ((disabled || isTyping) && window.monaco) {
-        editor.setSelection(new window.monaco.Selection(1, 1, 1, 1));
+      if (disabled && window.monaco) {
+        editor.setSelection(new window.monaco.Selection(1, 1, 1, 1)); // Reset the selection to the beginning
       }
     });
   };
 
   const options = {
-    readOnly: true, 
-    renderLineHighlight: 'none', 
-    selectOnLineNumbers: false,
-    cursorStyle: 'line',
-    minimap: { enabled: false },
-    scrollbar: {
-      vertical: 'hidden',
-      horizontal: 'hidden'
-    }
+    readOnly: true, // Make the editor read-only
+    renderLineHighlight: 'none', // Remove line highlight
+    selectOnLineNumbers: false, // Prevent selection on line numbers
+    cursorStyle: 'line', // Set cursor style
   };
 
   return (
-    <div className={`code-editor ${disabled || isTyping ? 'disabled' : ''}`}>
+    <div className={`code-editor ${disabled ? 'disabled' : ''}`}>
       <MonacoEditor
         theme="vs-dark"
         height="90vh"

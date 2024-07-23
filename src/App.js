@@ -33,7 +33,7 @@ const App = () => {
 "    dy = self.y - other_point.y",
 "    distance = math.sqrt(dx**2 + dy**2)",
 "    return distance"
-      ]
+  ]
     },
     {
       title: 'Task 2',
@@ -54,7 +54,7 @@ const App = () => {
         return text.lower()
             `,
             "fixed": `
-def uppercase(text):
+            def uppercase(text):
     return text.upper()
 
 def lowercase(text):
@@ -67,7 +67,7 @@ def lowercase(text):
             "fixed": "print(uppercase(another_bad_name))"
         },
         "print(\"1213212\")"
-      ]
+    ]
     }
   ];
 
@@ -99,55 +99,154 @@ def lowercase(text):
     }
   }, [disabled, timer]);
 
-  function parseCode(code, fixedErrors, renamedVars) {
-    const map = code.map(item => (typeof item === 'string' ? item.trim() : (fixedErrors.has(item.error) ? item.fixed.trim() : item.initial.trim())))
-    let answer = ""
-    for (const item of map) {
-      let line = item
-      for (const changedVariable of fixedErrors) {
-        line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVars[changedVariable])
+  function parserFromPython() { //easy version of parser
+    fetch('02.py')
+     .then(response => response.text())
+     .then((data) => {
+      const dataInArray = data.split("\n")
+      let finalCode = []
+      let bugs = {}
+      let prevWord = ""
+      let num = 0
+      let levelTitle = ""
+      let levelFilename = ""
+      let curInitialCode = ""
+      let curFixedCode = ""
+      let curMistaken = ""
+      let curFlag = 0
+      for (const id in dataInArray) {
+        const item = dataInArray[id]
+        let words = item.split(" ")
+        if (words[0] !== "##" && curFlag === 0) {
+          finalCode.push(item)
+          continue
+        }
+        if (words[0] !== "##") {
+          if (curFlag === 1) {
+            curInitialCode += words.toString + "\n"
+          }
+          else {
+            curFixedCode += words.toString + "\n"
+          }
+          continue
+        }
+        if (id === 0) {
+          levelTitle = words[1]
+        }
+        else if (id === 1) {
+          levelFilename = words[1]
+        }
+        else if (words.includes("error")) {
+          curMistaken = words[2]
+          curFlag = 1
+        }
+        else if (words.includes("fix")) {
+          curFlag = 2
+        }
+        else if (words.includes("end")) {
+          bugs[curMistaken] = curMistaken
+          num = num + 1
+          finalCode.push({
+            "error": curMistaken,
+            "initial": curInitialCode,
+            "fixed": curFixedCode
+          })
+          curMistaken = ""
+          curFlag = 0
+          curInitialCode = ""
+          curFixedCode = ""
+        }
+        else if (words.includes("mistake")) {
+          prevWord = words[words.length - 1]
+          curFlag = 1
+        }
+        else if (words.includes("correct")) {
+          bugs[prevWord] = words[words.length - 1]
+          num = num + 1
+          curFlag = 0
+        }
       }
-      answer += line + '\n'
+      console.log( {
+        title: levelTitle,
+        fileName: levelFilename,
+        "bugs": bugs,
+        "number": num,
+        "code": finalCode
+      })
+    })
     }
-    return answer
-  }
+  
+    function parseCode(code) {
+      console.log(parserFromPython())
+      if (wrongClickCount >= 5) {
+        setTimeout(() => {
+          setTerminalMessage('You clicked wrong too many times! Restarting the game...');
+          setTerminalMessageColor('red');
+          setShowTerminal(true);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        }, 5100);
+      }
+      const map = code.map(item => (typeof item === 'string' ? item.trim() : (set.has(item.error) ? item.fixed.trim() : item.initial.trim())))
+      let answer = ""
+      for (const item of map) {
+        let line = item
+        for (const changedVariable of set) {
+          line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVariables[changedVariable])
+        }
+        answer += line + '\n'
+      }
+      return answer
+    }
 
   const handleTaskSelect = (index) => {
-    setOfFixedErrors(new Set());
-    selectedTaskIndex = index;
+    set.clear()
+    selectedTaskIndex = index
     setRenamedVariables(tasks[index].bugs);
     setCompleted(false);
     setRenamed({});
     setShowTerminal(false);
+    setDisabled(false);
     setWrongClickCount(0);
     setIsTyping(true);
-    setCode('');  // Clear the code before typing animation
-
-    const newCode = parseCode(tasks[index].code, new Set(), tasks[index].bugs);
+    setCode('');
+    const newCode = parseCode(tasks[index].code);
     setCode(newCode);
 
-    // The typing animation is now handled in the CodeEditor component
+    // Set a timeout to end the typing animation
+    const typingDuration = newCode.length * 50; // Adjust based on your typing speed
+    setTimeout(() => {
+      setIsTyping(false);
+    }, typingDuration);
+
   };
 
   const handleVariableClick = (oldName) => {
-    if (isTyping) return;
+    if (disabled) return;
+    console.log(oldName)
     if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !set.has(oldName)) {
-      const newSet = new Set(set);
-      newSet.add(oldName);
-      setOfFixedErrors(newSet);
+      const newName = tasks[selectedTaskIndex].bugs[oldName];
+      if (oldName === newName) {
+       const newSet = set.add(oldName)
+       setOfFixedErrors(newSet)
+       setRenamed((prev) => ({ ...prev, [oldName]: true }));
+      }
+      else {
+      const newSet = set.add(oldName)
+      setOfFixedErrors(newSet)
       setRenamed((prev) => ({ ...prev, [oldName]: true }));
-      
-      const newFinalCode = parseCode(tasks[selectedTaskIndex].code, newSet, tasks[selectedTaskIndex].bugs)
-      setCode(newFinalCode);
-      
-      if (newSet.size === tasks[selectedTaskIndex].number) {
+      }
+      const newFinalCode = parseCode(tasks[selectedTaskIndex].code)
+      setCode(newFinalCode)
+      if (set.size === tasks[selectedTaskIndex].number) {
         setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
         setTerminalMessageColor('green');
         setShowTerminal(true);
       }
-    } else if (oldName) {
+    } else {
       setTerminalMessage('Error: You clicked on the wrong place.');
       setTerminalMessageColor('yellow');
       setShowTerminal(true);
@@ -157,7 +256,7 @@ def lowercase(text):
 
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(false);
+        setShowTerminal(true);
       }, 3000);
     }
   };
@@ -179,21 +278,14 @@ def lowercase(text):
       <Sidebar tasks={tasks.map((task, index) => ({
         ...task,
         completed: completedTasks.includes(index)
-      }))} onSelectTask={handleTaskSelect} />
+      }))} onSelectTask={() => {}} />
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor 
-          code={code} 
-          onVariableClick={handleVariableClick} 
-          disabled={disabled}
-          isTyping={isTyping}
-          setIsTyping={setIsTyping}
-          bugs={tasks[selectedTaskIndex].bugs}
-        />
+        <CodeEditor code={parseCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
+import {tasks} from './index.js'
 
 let selectedTaskIndex = 0
 
 const App = () => {
-  const tasks = [
+ /* const tasks = [
+    //parserFromFile('01.py'),
     {
       title: 'Task 1',
       fileName: 'task1.py',
@@ -401,92 +403,13 @@ print(pi * r**2)
       variables: {
         'BadName': 'sum'
       }
-    }*/
-  ];
-
-  const [set, setOfFixedErrors] = useState(new Set())  
-  const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
-  const [wrongClickCount, setWrongClickCount] = useState(0);
-
-  function parserFromPython() { //easy version of parser
-  fetch('02.py')
-   .then(response => response.text())
-   .then((data) => {
-    const dataInArray = data.split("\n")
-    let finalCode = []
-    let bugs = {}
-    let prevWord = ""
-    let num = 0
-    let levelTitle = ""
-    let levelFilename = ""
-    let curInitialCode = ""
-    let curFixedCode = ""
-    let curMistaken = ""
-    let curFlag = 0
-    for (const id in dataInArray) {
-      const item = dataInArray[id]
-      let words = item.split(" ")
-      if (words[0] !== "##" && curFlag === 0) {
-        finalCode.push(item)
-        continue
-      }
-      if (words[0] !== "##") {
-        if (curFlag === 1) {
-          curInitialCode += words.toString + "\n"
-        }
-        else {
-          curFixedCode += words.toString + "\n"
-        }
-        continue
-      }
-      if (id === 0) {
-        levelTitle = words[1]
-      }
-      else if (id === 1) {
-        levelFilename = words[1]
-      }
-      else if (words.includes("error")) {
-        curMistaken = words[2]
-        curFlag = 1
-      }
-      else if (words.includes("fix")) {
-        curFlag = 2
-      }
-      else if (words.includes("end")) {
-        bugs[curMistaken] = curMistaken
-        num = num + 1
-        finalCode.push({
-          "error": curMistaken,
-          "initial": curInitialCode,
-          "fixed": curFixedCode
-        })
-        curMistaken = ""
-        curFlag = 0
-        curInitialCode = ""
-        curFixedCode = ""
-      }
-      else if (words.includes("mistake")) {
-        prevWord = words[words.length - 1]
-        curFlag = 1
-      }
-      else if (words.includes("correct")) {
-        bugs[prevWord] = words[words.length - 1]
-        num = num + 1
-        curFlag = 0
-      }
     }
-    console.log( {
-      title: levelTitle,
-      fileName: levelFilename,
-      "bugs": bugs,
-      "number": num,
-      "code": finalCode
-    })
-  })
-  }
+  ];*/
 
   function parseCode(code) {
-    console.log(parserFromPython())
+    if (code.length == 0) {
+      return ""
+    }
     if (wrongClickCount >= 5) {
       setTimeout(() => {
         setTerminalMessage('You clicked wrong too many times! Restarting the game...');
@@ -508,6 +431,10 @@ print(pi * r**2)
     }
     return answer
   }
+
+  const [set, setOfFixedErrors] = useState(new Set())  
+  const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
+  const [wrongClickCount, setWrongClickCount] = useState(0);
 
   const [code, setCode] = useState(parseCode(tasks[0].code));
   const [renamed, setRenamed] = useState({});
@@ -548,14 +475,6 @@ print(pi * r**2)
 
   const handleVariableClick = (oldName) => {
     if (disabled) return;
-    console.log(wrongClickCount)
-    console.log(renamedVariables)
-    console.log(set)
-    console.log("HW")
-    console.log(tasks[selectedTaskIndex].code)
-    console.log(oldName)
-    console.log(renamedVariables[oldName])
-    console.log("HU")
     if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !set.has(oldName)) {
       const newName = tasks[selectedTaskIndex].bugs[oldName];
       if (oldName === newName) {

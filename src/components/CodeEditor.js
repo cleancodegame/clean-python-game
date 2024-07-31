@@ -1,17 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MonacoEditor, { loader } from '@monaco-editor/react';
-import './CodeEditor.css'; // Ensure you include the CSS file
+import './CodeEditor.css';
 
-const CodeEditor = ({ code, onVariableClick, disabled }) => {
+const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
+  const [displayedCode, setDisplayedCode] = useState(code);
+
   useEffect(() => {
     loader.init().then((monaco) => {
       window.monaco = monaco;
     });
   }, []);
 
+  useEffect(() => {
+    if (isTyping) {
+      let index = 0;
+      setDisplayedCode(''); // Clear the code before starting the animation
+      const interval = setInterval(() => {
+        setDisplayedCode((prev) => prev + code[index]);
+        index++;
+        if (index >= code.length) {
+          clearInterval(interval);
+        }
+      }, 10); // Adjust timing as needed
+
+      return () => clearInterval(interval);
+    } else {
+      setDisplayedCode(code);
+    }
+  }, [code, isTyping]);
+
   const handleEditorDidMount = (editor) => {
     editor.onMouseDown((e) => {
-      if (disabled) return;
+      console.log("Mouse down");
+      if (disabled||isTyping) return;
 
       const position = e.target.position;
       if (!position) {
@@ -21,6 +42,7 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
 
       const word = editor.getModel().getWordAtPosition(position);
       if (word) {
+        console.log("Word");
         const variableName = editor.getModel().getValueInRange({
           startLineNumber: position.lineNumber,
           startColumn: word.startColumn,
@@ -52,7 +74,7 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
         theme="vs-dark"
         height="90vh"
         language="python"
-        value={code}
+        value={displayedCode}
         options={options}
         onMount={handleEditorDidMount}
       />

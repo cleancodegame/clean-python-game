@@ -118,7 +118,7 @@ await makeFinalArray(["01.py", "02.py"]).then(() => {
 
 root.render(
   <React.StrictMode>
-    <App />
+    <App tasks={tasks}/>
   </React.StrictMode>
 );
 

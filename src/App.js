@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
-import {tasks} from './index.js'
+//import {tasks} from './index.js'
 
 let selectedTaskIndex = 0
 
-const App = () => {
+const App = ({tasks}) => {
  /* const tasks = [
     //parserFromFile('01.py'),
     {

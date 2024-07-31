@@ -1,5 +1,5 @@
-## Task 3
-## task3.py
+## Task 1
+## task1.py
 # Welcome to the Clean Code Game! 
 # Your task is to rename the badly named variables to more meaningful names.
 # Click on the variable names to rename them. 

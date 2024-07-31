@@ -431,7 +431,6 @@ print(pi * r**2)
     }
     return answer
   }
-  ];
 
   const [set, setOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
@@ -460,107 +459,6 @@ print(pi * r**2)
       return () => clearInterval(interval);
     }
   }, [disabled, timer]);
-
-  function parserFromPython() { //easy version of parser
-    fetch('02.py')
-     .then(response => response.text())
-     .then((data) => {
-      const dataInArray = data.split("\n")
-      let finalCode = []
-      let bugs = {}
-      let prevWord = ""
-      let num = 0
-      let levelTitle = ""
-      let levelFilename = ""
-      let curInitialCode = ""
-      let curFixedCode = ""
-      let curMistaken = ""
-      let curFlag = 0
-      for (const id in dataInArray) {
-        const item = dataInArray[id]
-        let words = item.split(" ")
-        if (words[0] !== "##" && curFlag === 0) {
-          finalCode.push(item)
-          continue
-        }
-        if (words[0] !== "##") {
-          if (curFlag === 1) {
-            curInitialCode += words.toString + "\n"
-          }
-          else {
-            curFixedCode += words.toString + "\n"
-          }
-          continue
-        }
-        if (id === 0) {
-          levelTitle = words[1]
-        }
-        else if (id === 1) {
-          levelFilename = words[1]
-        }
-        else if (words.includes("error")) {
-          curMistaken = words[2]
-          curFlag = 1
-        }
-        else if (words.includes("fix")) {
-          curFlag = 2
-        }
-        else if (words.includes("end")) {
-          bugs[curMistaken] = curMistaken
-          num = num + 1
-          finalCode.push({
-            "error": curMistaken,
-            "initial": curInitialCode,
-            "fixed": curFixedCode
-          })
-          curMistaken = ""
-          curFlag = 0
-          curInitialCode = ""
-          curFixedCode = ""
-        }
-        else if (words.includes("mistake")) {
-          prevWord = words[words.length - 1]
-          curFlag = 1
-        }
-        else if (words.includes("correct")) {
-          bugs[prevWord] = words[words.length - 1]
-          num = num + 1
-          curFlag = 0
-        }
-      }
-      console.log( {
-        title: levelTitle,
-        fileName: levelFilename,
-        "bugs": bugs,
-        "number": num,
-        "code": finalCode
-      })
-    })
-    }
-  
-    function parseCode(code) {
-      console.log(parserFromPython())
-      if (wrongClickCount >= 5) {
-        setTimeout(() => {
-          setTerminalMessage('You clicked wrong too many times! Restarting the game...');
-          setTerminalMessageColor('red');
-          setShowTerminal(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
-        }, 5100);
-      }
-      const map = code.map(item => (typeof item === 'string' ? item.trim() : (set.has(item.error) ? item.fixed.trim() : item.initial.trim())))
-      let answer = ""
-      for (const item of map) {
-        let line = item
-        for (const changedVariable of set) {
-          line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVariables[changedVariable])
-        }
-        answer += line + '\n'
-      }
-      return answer
-    }
 
   const handleTaskSelect = (index) => {
     set.clear()

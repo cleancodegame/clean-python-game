@@ -112,7 +112,7 @@ async function makeFinalArray(fileNames) {
   return tasks
 }
 
-await makeFinalArray(["01.py", "02.py"]).then(() => {
+await makeFinalArray(["01.py", "03.py", "02.py"]).then(() => {
   console.log(tasks);
 })
 

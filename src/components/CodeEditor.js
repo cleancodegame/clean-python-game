@@ -3,6 +3,7 @@ import MonacoEditor, { loader } from '@monaco-editor/react';
 import './CodeEditor.css';
 
 const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
+  isTyping = false
   const [displayedCode, setDisplayedCode] = useState(code);
 
   useEffect(() => {

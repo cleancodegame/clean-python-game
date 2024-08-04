@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import MonacoEditor, { loader } from '@monaco-editor/react';
 import './CodeEditor.css';
 
-const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
-  isTyping = false
-  const [displayedCode, setDisplayedCode] = useState(code);
+const CodeEditor = ({ code, onVariableClick, disabled }) => {
+  const [displayedCode, setDisplayedCode] = useState('');
+  const isAnimatingRef = useRef(false);
+  const editorRef = useRef(null);
 
   useEffect(() => {
     loader.init().then((monaco) => {
@@ -13,37 +14,40 @@ const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
   }, []);
 
   useEffect(() => {
-    if (isTyping) {
+    if (code !== displayedCode && !isAnimatingRef.current) {
+      isAnimatingRef.current = true;
       let index = 0;
-      setDisplayedCode(''); // Clear the code before starting the animation
+      setDisplayedCode('');
       const interval = setInterval(() => {
         setDisplayedCode((prev) => prev + code[index]);
         index++;
         if (index >= code.length) {
           clearInterval(interval);
+          isAnimatingRef.current = false;
         }
       }, 10); // Adjust timing as needed
 
-      return () => clearInterval(interval);
-    } else {
-      setDisplayedCode(code);
+      return () => {
+        clearInterval(interval);
+        isAnimatingRef.current = false;
+      };
     }
-  }, [code, isTyping]);
+  }, [code]);
 
-  const handleEditorDidMount = (editor) => {
+  const handleEditorDidMount = (editor, monaco) => {
+    editorRef.current = editor;
+
     editor.onMouseDown((e) => {
-      console.log("Mouse down");
-      if (disabled||isTyping) return;
+      if (disabled || isAnimatingRef.current) return;
 
       const position = e.target.position;
       if (!position) {
-        onVariableClick(null); // Handle wrong click
+        onVariableClick(null);
         return;
       }
 
       const word = editor.getModel().getWordAtPosition(position);
       if (word) {
-        console.log("Word");
         const variableName = editor.getModel().getValueInRange({
           startLineNumber: position.lineNumber,
           startColumn: word.startColumn,
@@ -54,19 +58,18 @@ const CodeEditor = ({ code, onVariableClick, disabled, isTyping }) => {
       }
     });
 
-    // Disable text selection
     editor.onDidChangeCursorSelection((e) => {
-      if (disabled && window.monaco) {
-        editor.setSelection(new window.monaco.Selection(1, 1, 1, 1)); // Reset the selection to the beginning
+      if (disabled && monaco) {
+        editor.setSelection(new monaco.Selection(1, 1, 1, 1));
       }
     });
   };
 
   const options = {
-    readOnly: true, // Make the editor read-only
-    renderLineHighlight: 'none', // Remove line highlight
-    selectOnLineNumbers: false, // Prevent selection on line numbers
-    cursorStyle: 'line', // Set cursor style
+    readOnly: true,
+    renderLineHighlight: 'none',
+    selectOnLineNumbers: false,
+    cursorStyle: 'line',
   };
 
   return (

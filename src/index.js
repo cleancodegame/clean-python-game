@@ -6,8 +6,14 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-export let tasks = []
+/*
+TODO Review:
+1. Move all parsing code to a separate file
+2. Reformat the code to fix indentation problems (Ctrl+Shift+P + Format Document)
+3. makeArray, makeFinalArray - too generic name
+*/
 
+export let tasks = []
 function parserFromPython(dataInArray) {
   let finalCode = []
   let bugsFound = {}
@@ -74,6 +80,7 @@ function parserFromPython(dataInArray) {
       num = num + 1
     }
   }
+  //TODO: do not create an object twice:
   const item = {
     title: levelTitle,
     fileName: levelFilename,
@@ -94,7 +101,7 @@ function parserFromPython(dataInArray) {
 async function parserFromFile(fileName) {
 let response = await fetch(fileName)
 let data = await response.text()
-return data.split("\n")
+return data.split(RegExp("\r?\n"))
 }
 
 async function makeArray(fileName) {
@@ -109,12 +116,9 @@ async function makeFinalArray(fileNames) {
   let task = await makeArray(curFile);
   tasks.push(...task);
   }
-  return tasks
 }
 
-await makeFinalArray(["01.py", "03.py", "02.py"]).then(() => {
-  console.log(tasks);
-})
+await makeFinalArray(["01.py", "03.py", "02.py"]);
 
 root.render(
   <React.StrictMode>

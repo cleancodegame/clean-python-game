@@ -4,7 +4,6 @@ import './CodeEditor.css';
 
 const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
   const [lastIndex, setLastIndex] = useState(0)
-  const isAnimatingRef = useRef(false);
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -14,19 +13,20 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
   }, []);
 
   useEffect(() => {
-      //isAnimatingRef.current = true;
       setLastIndex(0)
       const interval = setInterval(() => {
-        setLastIndex((previousLastIndex) => (previousLastIndex + 1))
-        if (lastIndex >= code.length) {
-          clearInterval(interval);
-          isAnimatingRef.current = false;
-        }
+        setLastIndex((li) => {
+          if (li >= code.length) {
+            console.log("DONE!");
+            clearInterval(interval);
+            return li;
+          }
+          return li + 3
+        })
       }, 10); // Adjust timing as needed
 
       return () => {
         clearInterval(interval);
-        isAnimatingRef.current = false;
       };
     }
  ,[levelId]);
@@ -35,7 +35,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
     editorRef.current = editor;
 
     editor.onMouseDown((e) => {
-      if (disabled || isAnimatingRef.current) return;
+      if (disabled) return;
 
       const position = e.target.position;
       if (!position) {

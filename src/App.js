@@ -6,10 +6,12 @@ import './App.css';
 let selectedTaskIndex = 0
 
 const App = ({tasks}) => {
+  //TODO: parseCode is strange name. It does a lot of very different things.
   function parseCode(code) {
     if (code.length == 0) {
       return ""
     }
+    // TODO: function named parseCode is wrong place for this code.
     if (wrongClickCount >= 5) {
       setTimeout(() => {
         setTerminalMessage('You clicked wrong too many times! Restarting the game...');
@@ -32,6 +34,7 @@ const App = ({tasks}) => {
     return answer
   }
 
+  //TODO: `set` is too generic name
   const [set, setOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
   const [wrongClickCount, setWrongClickCount] = useState(0);

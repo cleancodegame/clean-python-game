@@ -144,7 +144,7 @@ const App = ({tasks}) => {
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={parseCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} />
+        <CodeEditor code={parseCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={selectedTaskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

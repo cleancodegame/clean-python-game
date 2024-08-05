@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import MonacoEditor, { loader } from '@monaco-editor/react';
 import './CodeEditor.css';
 
-const CodeEditor = ({ code, onVariableClick, disabled }) => {
-  const [displayedCode, setDisplayedCode] = useState('');
+const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
+  const [lastIndex, setLastIndex] = useState(0)
   const isAnimatingRef = useRef(false);
   const editorRef = useRef(null);
 
@@ -14,14 +14,11 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
   }, []);
 
   useEffect(() => {
-    if (code !== displayedCode && !isAnimatingRef.current) {
-      isAnimatingRef.current = true;
-      let index = 0;
-      setDisplayedCode('');
+      //isAnimatingRef.current = true;
+      setLastIndex(0)
       const interval = setInterval(() => {
-        setDisplayedCode((prev) => prev + code[index]);
-        index++;
-        if (index >= code.length) {
+        setLastIndex((previousLastIndex) => (previousLastIndex + 1))
+        if (lastIndex >= code.length) {
           clearInterval(interval);
           isAnimatingRef.current = false;
         }
@@ -32,7 +29,7 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
         isAnimatingRef.current = false;
       };
     }
-  }, [code]);
+ ,[levelId]);
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -78,7 +75,7 @@ const CodeEditor = ({ code, onVariableClick, disabled }) => {
         theme="vs-dark"
         height="90vh"
         language="python"
-        value={displayedCode}
+        value={code.slice(0, lastIndex)}
         options={options}
         onMount={handleEditorDidMount}
       />

@@ -11,6 +11,7 @@ TODO Review:
 1. Move all parsing code to a separate file
 2. Reformat the code to fix indentation problems (Ctrl+Shift+P + Format Document)
 3. makeArray, makeFinalArray - too generic name
+4. Fix linter errors (in the terminal window after npm start) about === vs ==
 */
 
 export let tasks = []
@@ -99,9 +100,9 @@ function parserFromPython(dataInArray) {
 }
 }
 async function parserFromFile(fileName) {
-let response = await fetch(fileName)
-let data = await response.text()
-return data.split(RegExp("\r?\n"))
+  let response = await fetch(fileName)
+  let data = await response.text()
+  return data.split(RegExp("\\r?\\n"))
 }
 
 async function makeArray(fileName) {

@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
 
+// TODO move it to the App component state
 let selectedTaskIndex = 0
 
 const App = ({tasks}) => {
@@ -34,6 +35,7 @@ const App = ({tasks}) => {
     return answer
   }
 
+  //TODO: look at the linter warnings (in the terminal window after npm start). Remove unused state variables
   //TODO: `set` is too generic name
   const [set, setOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);

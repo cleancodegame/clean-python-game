@@ -29,7 +29,8 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
         clearInterval(interval);
       };
     }
- ,[levelId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    , [levelId]);
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;

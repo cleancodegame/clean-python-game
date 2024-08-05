@@ -23,7 +23,7 @@ const App = ({tasks}) => {
         }, 3000);
       }, 5100);
     }
-    const map = code.map(item => (typeof item === 'string' ? item.trim() : (set.has(item.error) ? item.fixed.trim() : item.initial.trim())))
+    const map = code.map(item => (typeof item === 'string' ? item : (set.has(item.error) ? item.fixed : item.initial)))
     let answer = ""
     for (const item of map) {
       let line = item

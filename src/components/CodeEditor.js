@@ -13,7 +13,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
   }, []);
 
   useEffect(() => {
-      setLastIndex(0)
+    setLastIndex(0)
       const interval = setInterval(() => {
         setLastIndex((li) => {
           if (li >= code.length) {
@@ -34,8 +34,15 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
+    
+    // set a pointer as a mouse cursor (no editor API for this)
+    // mouseStyle option has only 'copy' value, but not 'pointer'
+    const editorDom = editorRef.current.getDomNode();
+    const viewLines = editorDom.querySelector('.view-lines');
+    viewLines.classList.add('monaco-mouse-cursor-pointer');
+    viewLines.classList.remove('monaco-mouse-cursor-text');
 
-    editor.onMouseDown((e) => {
+    editor.onMouseUp((e) => {
       if (disabled) return;
 
       const position = e.target.position;
@@ -57,7 +64,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
     });
 
     editor.onDidChangeCursorSelection((e) => {
-      if (disabled && monaco) {
+      if (monaco) {
         editor.setSelection(new monaco.Selection(1, 1, 1, 1));
       }
     });
@@ -67,9 +74,13 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
     readOnly: true,
     renderLineHighlight: 'none',
     selectOnLineNumbers: false,
-    cursorStyle: 'line',
+    occurrencesHighlight: false,
+    matchBrackets: false,
+    minimap: { enabled: false, },
+    scrollbar: { vertical: 'hidden', horizontal: 'hidden', },
   };
 
+  // TODO: Remove ugly vertical scrollbar
   return (
     <div className={`code-editor ${disabled ? 'disabled' : ''}`}>
       <MonacoEditor

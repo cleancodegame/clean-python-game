@@ -19,7 +19,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
           if (li >= code.length) {
             console.log("DONE!");
             clearInterval(interval);
-            return li;
+            return 10000000;
           }
           return li + 3
         })

@@ -8,7 +8,7 @@
   white-space: pre-wrap;
   line-height: 1.6;
   border-bottom: 1px solid #3c3c3c;
-  overflow: auto;
+  overflow: hidden /*auto*/;
   user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -50,4 +50,15 @@
 }
 .monaco-editor .cursors-layer > .cursor {
   display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+  .code-editor {
+    padding: 10px;
+  }
+
+  .line-number {
+    width: 20px;
+    padding-right: 5px;
+  }
 }

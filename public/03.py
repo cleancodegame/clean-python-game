@@ -2,7 +2,7 @@
 ## task2.py
 class LongMethodNames:
   def long_method_name_one(self, x):
-    return x + 1
+    return x+1
 
   def long_method_name_two(self, y):
     return y - 1

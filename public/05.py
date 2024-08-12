@@ -1,6 +1,6 @@
 ## Task 5
 ## task5.py
-## error host
+## remove host, port, use_https, timeout, retries, logging_enabled
 def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     protocol = "https" if use_https else "http"
     print(f"Starting server at {protocol}://{host}:{port}")
@@ -9,7 +9,8 @@ def configure_server(host, port, use_https, timeout, retries, logging_enabled):
         print("Logging is enabled")
     else:
         print("Logging is disabled")
-## fix
+## end
+## add host, port, use_https, timeout, retries, logging_enabled
 def configure_server(options):
     protocol = "https" if options['use_https'] else "http"
     print(f"Starting server at {protocol}://{options['host']}:{options['port']}")
@@ -20,10 +21,11 @@ def configure_server(options):
         print("Logging is disabled")
 ## end
 
-# Original call
-# configure_server("localhost", 8080, True, 30, 5, True)
+## remove host, port, use_https, timeout, retries, logging_enabled
+configure_server("localhost", 8080, True, 30, 5, True)
+##end
 
-# Refactored call with options object
+## add host, port, use_https, timeout, retries, logging_enabled
 serverUsedoption = {
     "host": "localhost",
     "port": 8080,
@@ -34,5 +36,7 @@ serverUsedoption = {
 }
 
 configure_server(serverUsedoption)
+## end
+
 ## mistake serverUsedoption
 ## correct server_options

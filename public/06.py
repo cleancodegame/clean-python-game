@@ -1,14 +1,15 @@
 ## Task 6
 ## task6.py
 import random
-## error 36
-def roll():
-    return random.randint(0, 36)
-## fix
-rouletteCount = 36
-def roll():
-    return random.randint(0, rouletteCount)
+
+## add 86400
+secondsperday = 24*60*60
 ## end
-print(roll())
-## mistake rouletteCount
-## correct ROULETTE_COUNT
+
+def get_delay():
+    return random.randint(0, 86400)
+## mistake 86400
+## correct secondsperday
+## mistake secondsperday
+## correct seconds_per_day
+

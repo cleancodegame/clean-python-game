@@ -9,7 +9,7 @@ let selectedTaskIndex = 0
 const App = ({tasks}) => {
   //TODO: parseCode is strange name. It does a lot of very different things.
   function processCode(code) {
-    if (code.length == 0) {
+    if (code.length === 0) {
       return ""
     }
     // TODO: function named parseCode is wrong place for this code.
@@ -23,11 +23,11 @@ const App = ({tasks}) => {
         }, 3000);
       }, 5100);
     }
-    const map = code.map(item => (typeof item === 'string' ? item : (set.has(item.error) ? item.fixed : item.initial)))
+    const map = code.map(item => (typeof item === 'string' ? item : (setOfFixedErrors.has(item.error) ? item.fixed : item.initial)))
     let answer = ""
     for (const item of map) {
       let line = item
-      for (const changedVariable of set) {
+      for (const changedVariable of setOfFixedErrors) {
         line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVariables[changedVariable])
       }
       answer += line + '\n'
@@ -66,7 +66,7 @@ const App = ({tasks}) => {
   }, [disabled, timer]);
 
   const handleTaskSelect = (index) => {
-    set.clear()
+    setOfFixedErrors.clear()
     selectedTaskIndex = index
     setRenamedVariables(tasks[index].bugs);
     setCompleted(false);
@@ -89,7 +89,7 @@ const App = ({tasks}) => {
 
   const handleVariableClick = (oldName) => {
     if (disabled) return;
-    if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !set.has(oldName)) {
+    if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
       const newName = tasks[selectedTaskIndex].bugs[oldName];
       if (oldName === newName) {
        const newSet = setOfFixedErrors.add(oldName)

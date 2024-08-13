@@ -113,7 +113,7 @@ async function makeFinalArray(fileNames) {
   }
 }
 
-await makeFinalArray(["01.py", "03.py", "02.py"]);
+await makeFinalArray(["05.py"]);
 
 root.render(
   <React.StrictMode>

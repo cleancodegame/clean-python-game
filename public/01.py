@@ -4,9 +4,10 @@
 # Your task is to rename the badly named variables to more meaningful names.
 # Click on the variable names to rename them. 
 # When all variables are renamed, you can proceed to the next task.
+## first_option BAD_varIaBlE_naMe
 
 def hello():
-    BAD_varIaBlE_naME = "Hello world!"
-    print(BAD_varIaBlE_naME)
-## mistake BAD_varIaBlE_naME
+    first_option = "Hello world!"
+    print(first_option)
+## mistake BAD_varIaBlE_naME BAD_VAriABLE_NAME
 ## correct greeting

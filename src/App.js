@@ -8,7 +8,7 @@ let selectedTaskIndex = 0
 
 const App = ({tasks}) => {
   //TODO: parseCode is strange name. It does a lot of very different things.
-  function parseCode(code) {
+  function processCode(code) {
     if (code.length == 0) {
       return ""
     }
@@ -37,10 +37,10 @@ const App = ({tasks}) => {
 
   //TODO: look at the linter warnings (in the terminal window after npm start). Remove unused state variables
   //TODO: `set` is too generic name
-  const [set, setOfFixedErrors] = useState(new Set())  
+  const [setOfFixedErrors, updateSetOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
   const [wrongClickCount, setWrongClickCount] = useState(0);
-  const [code, setCode] = useState(parseCode(tasks[0].code));
+  const [code, setCode] = useState(processCode(tasks[0].code));
   const [renamed, setRenamed] = useState({});
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -76,7 +76,7 @@ const App = ({tasks}) => {
     setWrongClickCount(0);
     setIsTyping(true);
     setCode('');
-    const newCode = parseCode(tasks[index].code);
+    const newCode = processCode(tasks[index].code);
     setCode(newCode);
 
     // Set a timeout to end the typing animation
@@ -92,18 +92,18 @@ const App = ({tasks}) => {
     if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !set.has(oldName)) {
       const newName = tasks[selectedTaskIndex].bugs[oldName];
       if (oldName === newName) {
-       const newSet = set.add(oldName)
-       setOfFixedErrors(newSet)
+       const newSet = setOfFixedErrors.add(oldName)
+       updateSetOfFixedErrors(newSet)
        setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
       else {
-      const newSet = set.add(oldName)
-      setOfFixedErrors(newSet)
+      const newSet = setOfFixedErrors.add(oldName)
+      updateSetOfFixedErrors(newSet)
       setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
-      const newFinalCode = parseCode(tasks[selectedTaskIndex].code)
+      const newFinalCode = processCode(tasks[selectedTaskIndex].code)
       setCode(newFinalCode)
-      if (set.size === tasks[selectedTaskIndex].number) {
+      if (setOfFixedErrors.size === tasks[selectedTaskIndex].number) {
         setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
@@ -149,7 +149,7 @@ const App = ({tasks}) => {
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
-        <CodeEditor code={parseCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={selectedTaskIndex} />
+        <CodeEditor code={processCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={selectedTaskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

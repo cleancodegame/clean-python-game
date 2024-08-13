@@ -30,12 +30,12 @@ function parserFromPython(dataInArray) {
   for (const lineIndex in dataInArray) {
     const item = dataInArray[lineIndex]
     let words = item.split(" ")
-    if (words[0] != "##" && blockOfIncorrectLines == false) {
+    if (words[0] !== "##" && !blockOfIncorrectLines) {
       finalCode.push(item)
       continue
     }
-    if (words[0] != "##") {
-      if (initialCode == true) {
+    if (words[0] !== "##") {
+      if (initialCode === true) {
         curInitialCode += item + "\n"
       }
       else {
@@ -43,21 +43,21 @@ function parserFromPython(dataInArray) {
       }
       continue
     }
-    if (lineIndex == 0) {
+    if (lineIndex === 0) {
       levelTitle = words[1] + " " + words[2]
     }
-    else if (lineIndex == 1) {
+    else if (lineIndex === 1) {
       levelFilename = words[1]
     }
-    else if (words[1] == "error") {
+    else if (words[1] === "error") {
       curMistaken = words[2]
       initialCode = true
       blockOfIncorrectLines = true
     }
-    else if (words[1] == "fix") {
+    else if (words[1] === "fix") {
       initialCode = false
     }
-    else if (words[1] == "end") {
+    else if (words[1] === "end") {
       if (typeof bugsFound[curMistaken] == "undefined") {
         num = num + 1
       }
@@ -73,10 +73,10 @@ function parserFromPython(dataInArray) {
       curInitialCode = ""
       curFixedCode = ""
     }
-    else if (words[1] == "mistake") {
+    else if (words[1] === "mistake") {
       prevWord = words[words.length - 1]
     }
-    else if (words[1] == "correct") {
+    else if (words[1] === "correct") {
       bugsFound[prevWord] = words[words.length - 1]
       num = num + 1
     }
@@ -90,13 +90,7 @@ function parserFromPython(dataInArray) {
     'code': finalCode
   }
   if (typeof item !== "undefined") {
-  return {
-    title: levelTitle,
-    fileName: levelFilename,
-    bugs: bugsFound,
-    number: num,
-    code: finalCode
-  }
+  return item
 }
 }
 async function parserFromFile(fileName) {

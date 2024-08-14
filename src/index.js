@@ -16,6 +16,24 @@ TODO Review:
 
 export let tasks = []
 function parserFromPython(dataInArray) {
+  let currentLine = 0;
+  let lines = dataInArray;
+
+  function parseReplace(){
+    // start parsing from lines[currentLine], increase currentLine, 
+    // return object describing the instruction
+    return {
+      actionType: "replace", // ??
+      eventId: "",
+      substring: null,
+      code: "",
+      replacementCode: "",
+    }
+  }
+
+  // function parseAdd and others
+
+
   let finalCode = []
   let bugsFound = {}
   let prevWord = ""
@@ -113,7 +131,7 @@ async function makeFinalArray(fileNames) {
   }
 }
 
-await makeFinalArray(["05.py"]);
+await makeFinalArray(["01.py"]);
 
 root.render(
   <React.StrictMode>

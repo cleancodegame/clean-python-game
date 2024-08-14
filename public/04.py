@@ -1,41 +1,38 @@
 ## Task 4
 ## task4.py
 def process_data(data):
-## remove # Cleaning data
+## replace@clean
     # Cleaning data
     cleaned_data = []
     for item in data:
         cleaned_item = item.strip().lower().replace(",", "")
         cleaned_data.append(cleaned_item)
-## end
-## add # Cleaning data
+## with
     cleaned_data = clean_data(data)
 ## end
 
-## remove
+## replace # Filtering data
     # Filtering data
     filtered_data = []
     for item in cleaned_data:
         if len(item) > 3:
             filtered_data.append(item)
-## end
-## add # Filtering data
+## with
     filtered_data = filter_data(cleaned_data)
 ## end
 
-## remove
+## replace # Formatting data
     # Formatting data
     final_data = []
     for item in filtered_data:
         final_data.append(f"Processed: {item}")
-## end
-## add # Formatting data
+## with
     final_data = format_data(filtered_data)
 ## end
     
     return final_data
 
-## add Cleaning data
+## add@clean
 def clean_data(data):
     cleaned_data = []
     for item in data:
@@ -44,7 +41,7 @@ def clean_data(data):
     return cleaned_data
 ## end
 
-## add Filtering data
+## add # Filtering data
 def filter_data(cleaned_data):
     filtered_data = []
     for item in cleaned_data:
@@ -52,7 +49,7 @@ def filter_data(cleaned_data):
             filtered_data.append(item)
     return filtered_data
 ## end
-## add Formatting data
+## add # Formatting data
 def format_data(filtered_data):
     final_data = []
     for item in filtered_data:

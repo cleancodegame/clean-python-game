@@ -60,6 +60,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
           endColumn: word.endColumn,
         });
         onVariableClick(variableName);
+        // TODO: onEvent(eventId), where eventId is acalculated with e.target.position and task.codemap
       }
     });
 

@@ -35,10 +35,25 @@ const App = ({tasks}) => {
     return answer
   }
 
-  //TODO: look at the linter warnings (in the terminal window after npm start). Remove unused state variables
-  //TODO: `set` is too generic name
+
+  function renderCode(task, eventsHappened){
+    // renders all the blocks from task.blocks according to eventsHappened
+    return {
+      code: "code to display",
+      codemap: [
+        {startIndex: 1, endIndex: 20, eventId: "badNameClick"},
+        // ...
+      ]
+
+    };
+  }
+
+  const [taskIndex, setTaskIndex] = useState(0)
+  const [eventsHappened, setEventsHappened] = useState([])  
+  //TODO: next two states should not be used:
   const [setOfFixedErrors, updateSetOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
+
   const [wrongClickCount, setWrongClickCount] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -131,6 +146,8 @@ const App = ({tasks}) => {
             <span>{tasks[selectedTaskIndex].fileName}</span>
           </div>
         </div>
+
+        { /* TODO use renderCode here: */ }
         <CodeEditor code={processCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={selectedTaskIndex} />
         {showTerminal && (
           <div className="terminal">

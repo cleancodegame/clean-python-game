@@ -45,4 +45,6 @@ it is allowed to click only inside this <SUBSTRING>!!!
 ## add-on <EVENT_ID>
 ...
 ## end
+
+## explain <EVENT_ID> <EXPLANATION_TEXT>
 ```

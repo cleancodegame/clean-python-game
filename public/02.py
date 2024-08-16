@@ -14,7 +14,7 @@ def uppercase(s):
 def lowercase(s):
     return s.lower()
 ## end
-
+## explain uppercase_click Prefer not to use boolean arguments — they make the code harder to read. Instead, create separate methods for each case.
 
 print("Hello")
 another_bad_name = "Pavel"
@@ -25,5 +25,5 @@ print(transform(another_bad_name, True))
 print(uppercase(another_bad_name))
 ## end
 print("123123")
-## mistake another_bad_name
-## correct name
+## replace-inline another_bad_name another_bad_name
+## with name

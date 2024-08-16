@@ -1,13 +1,13 @@
 ## Task 3
 ## task3.py
-## error uppercase
+## replace uppercase_click uppercase
 def transform(s, uppercase):
     bad_variable_name = "..."
     if uppercase:
         return s.upper()
     else:
         return s.lower()
-## fix
+## with
 def uppercase(s):
     return s.upper()
 
@@ -19,9 +19,9 @@ def lowercase(s):
 print("Hello")
 another_bad_name = "Pavel"
 print(another_bad_name)
-## error uppercase
+## replace-on uppercase_click
 print(transform(another_bad_name, True))
-## fix
+## with
 print(uppercase(another_bad_name))
 ## end
 print("123123")

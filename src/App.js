@@ -40,8 +40,6 @@ const App = ({tasks}) => {
   const [setOfFixedErrors, updateSetOfFixedErrors] = useState(new Set())  
   const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
   const [wrongClickCount, setWrongClickCount] = useState(0);
-  const [code, setCode] = useState(processCode(tasks[0].code));
-  const [renamed, setRenamed] = useState({});
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
   const [showTerminal, setShowTerminal] = useState(false);
@@ -49,10 +47,10 @@ const App = ({tasks}) => {
   const [terminalMessageColor, setTerminalMessageColor] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [timer, setTimer] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
     handleTaskSelect(0);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -70,21 +68,9 @@ const App = ({tasks}) => {
     selectedTaskIndex = index
     setRenamedVariables(tasks[index].bugs);
     setCompleted(false);
-    setRenamed({});
     setShowTerminal(false);
     setDisabled(false);
     setWrongClickCount(0);
-    setIsTyping(true);
-    setCode('');
-    const newCode = processCode(tasks[index].code);
-    setCode(newCode);
-
-    // Set a timeout to end the typing animation
-    const typingDuration = newCode.length * 50; // Adjust based on your typing speed
-    setTimeout(() => {
-      setIsTyping(false);
-    }, typingDuration);
-
   };
 
   const handleVariableClick = (oldName) => {
@@ -94,15 +80,11 @@ const App = ({tasks}) => {
       if (oldName === newName) {
        const newSet = setOfFixedErrors.add(oldName)
        updateSetOfFixedErrors(newSet)
-       setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
       else {
       const newSet = setOfFixedErrors.add(oldName)
       updateSetOfFixedErrors(newSet)
-      setRenamed((prev) => ({ ...prev, [oldName]: true }));
       }
-      const newFinalCode = processCode(tasks[selectedTaskIndex].code)
-      setCode(newFinalCode)
       if (setOfFixedErrors.size === tasks[selectedTaskIndex].number) {
         setCompleted(true);
         setCompletedTasks((prev) => [...prev, selectedTaskIndex]);

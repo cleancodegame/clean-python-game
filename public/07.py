@@ -2,32 +2,31 @@
 ## task7.py
 def process_data(data, operation):
     if operation == "sum":
-        ## remove return data[0] + data[1] + data[2] + data[3] + data[4]
-        return data[0] + data[1] + data[2] + data[3] + data[4]
-        ## end
-        ## add sum(data)
+        ## replace
+        s = 0
+        for item in data:
+            s += item
+        return s
+        ## with
         return sum(data)
         ## end
     elif operation == "avg":
-        ## remove return (data[0] + data[1] + data[2] + data[3] + data[4]) / 5
-        return (data[0] + data[1] + data[2] + data[3] + data[4]) / 5
-        ## end
-        ## add sum(data) / len(data)
+        ## replace
+        s = 0
+        for item in data:
+            s += item
+        return s / len(data)
+        ## with
         return sum(data) / len(data)
         ## end
     elif operation == "max":
-        ## remove
-        if data[1] > max_val:
-            max_val = data[1]
-        if data[2] > max_val:
-            max_val = data[2]
-        if data[3] > max_val:
-            max_val = data[3]
-        if data[4] > max_val:
-            max_val = data[4]
+        ## replace
+        max_val = data[0]
+        for item in data:
+            if item > max_val:
+                max_val = item
         return max_val
-        ## end
-        ## add
+        ## with
         return max(data)
         ## end
 

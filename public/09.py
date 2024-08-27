@@ -7,52 +7,15 @@ def get_product_details(product_id):
         return "Laptop", 1200, "Electronics"
     ## end
     ## remove
-    elif product_id == 2:
-        return "Smartphone", 800, "Electronics"
-    ## end
-    ## add 
     if product_id == 2:
         return "Smartphone", 800, "Electronics"
-    ## end
-    ## remove
-    if product_id == 2:
-        return "Tablet", 600, "Electronics"
     ## end
     ## remove
     elif product_id == 3:
         return "Tablet", 600, "Electronics"
     ## end
-    ## add
-    if product_id == 3:
-        return "Tablet", 600, "Electronics"
-    ## end
-    ## remove
-    if product_id == 3:
-        return "Tablet", 600, "Electronics"
-    ## end
-    ## remove
-    elif product_id == 4:
-        return "Headphones", 150, "Accessories"
-    ## end
-    ## add
     if product_id == 4:
         return "Headphones", 150, "Accessories"
-    ## end
-    ## remove
-    if product_id == 4:
-        return "Headphones", 150, "Accessories"
-    ## end
-    ## remove
-    elif product_id == 5:
-        return "Charger", 20, "Accessories"
-    else:
-        return "Unknown product", 0, "Unknown category"
-    ## end
-    ## add
-    if product_id == 5:
-        return "Charger", 20, "Accessories"
-    else:
-        return "Unknown product", 0, "Unknown category"
     ## end
     ## remove
     if product_id == 5:

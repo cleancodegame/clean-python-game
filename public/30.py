@@ -2,14 +2,14 @@
 ## task30.py
 #VH
 def find_discounted_price(prices, discount_threshold):
-    ##remove
+    ## remove
     final_price = None
-    ##end
+    ## end
     for price in prices:
         if price < discount_threshold:
             final_price = price
-    ##replace
+    ## replace
     return final_price
-    ##with
+    ## with
     return None
 

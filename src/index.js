@@ -18,22 +18,23 @@ export let tasks = [];
 function parserFromPython(dataInArray) {
   let currentLine = 0;
   let lines = dataInArray;
-  let 
   function parseReplace() {
     // start parsing from lines[currentLine], increase currentLine,
     // return object describing the instruction
     let initialCode = ""
     let finalCode = ""
     let lastCommand = ""
+    let eventId = ""
     while (currentLine < lines.length) {
-      if (lines[currentLine] === "## replace") {
-        lastCommand = "replace"
-      }
-      else if (lines[currentLine] === "## with") {
+      if (lines[currentLine] === "## with") {
         lastCommand = "with"
       }
       else if (lines[currentLine] === "## end") {
         break
+      }
+      else if (lines[currentLine][0] + lines[currentLine][1] === "##") {
+        eventId = lines[currentLine].split(" ")[2]
+        lastCommand = "replace"
       }
       else if (lastCommand === "replace") {
         initialCode += lines[currentLine]
@@ -45,34 +46,58 @@ function parserFromPython(dataInArray) {
     }
     return {
       actionType: "replace",
-      eventId: "",
+      eventId: eventId,
       substring: null, //?
-      code: finalCode,
-      replacementCode: initialCode,
+      code: initialCode,
+      replacementCode: finalCode,
     };
   }
   function parseRemove() {
     let initialCode = ""
+    let eventId = ""
     while (currentLine < lines.length) {
       if (lines[currentLine] === "## end") {
         break
       }
-      else {
+      else if (lines[currentLine][0] + lines[currentLine][1] !== "##") {
         initialCode += lines[currentLine]
       }
+      else {
+        eventId = lines[currentLine].split(" ")[2]
+      }
+      currentLine += 1
     }
     return {
       actionType: "remove",
-      eventId: "",
+      eventId: eventId,
       substring: null, //?
       code: initialCode,
       replacementCode: "",
     };
   }
   function parseAdd() {
-
+    let finalCode = ""
+    let eventId = ""
+    while (currentLine < lines.length) {
+      if (lines[currentLine] == "## end") {
+        break
+      }
+      else if (lines[currentLine][0] + lines[currentLine][1] !== "##") {
+        finalCode += lines[currentLine]
+      }
+      else {
+        eventId = lines[currentLine].split(" ")[2]
+      }
+      currentLine += 1
+    }
+    return {
+      actionType: "add",
+      eventId: eventId,
+      substring: null, //?
+      code: "",
+      replacementCode: finalCode,
+    };
   }
-}
 
   // function parseAdd and others
 

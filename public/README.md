@@ -79,11 +79,6 @@ it is allowed to click only inside this <SUBSTRING>!!!
 ...
 ## end
 
-
-## add <EVENT_ID> <SUBSTRING>
-...
-## end
-
 ## add-on <EVENT_ID>
 ...
 ## end

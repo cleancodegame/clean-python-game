@@ -7,11 +7,11 @@
 def apply_discount(cart, discount):
     total_discount = 0
     for item in cart:
-        ##replace
+        ## replace
         item['price'] *= (1 - discount)
         total_discount += item['price'] * discount
-        ##with
+        ## with
         discounted_price = item['price'] * (1 - discount)
         total_discount += item['price'] - discounted_price
-        ##end
+        ## end
     return total_discount

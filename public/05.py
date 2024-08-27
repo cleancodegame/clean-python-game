@@ -1,7 +1,6 @@
 ## Task 5
 ## task5.py
-## remove host, port, use_https, timeout, retries, logging_enabled
-## remove-define argsClick host, port, use_https, timeout, retries, logging_enabled
+## remove argsClick host, port, use_https, timeout, retries, logging_enabled
 def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     protocol = "https" if use_https else "http"
     print(f"Starting server at {protocol}://{host}:{port}")
@@ -11,8 +10,7 @@ def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     else:
         print("Logging is disabled")
 ## end
-## add host, port, use_https, timeout, retries, logging_enabled
-## add-on-event argsClick
+## add-on argsClick
 def configure_server(options):
     protocol = "https" if options['use_https'] else "http"
     print(f"Starting server at {protocol}://{options['host']}:{options['port']}")
@@ -23,11 +21,11 @@ def configure_server(options):
         print("Logging is disabled")
 ## end
 
-## remove-on-event argsClick
+## remove-on argsClick
 configure_server("localhost", 8080, True, 30, 5, True)
 ##end
 
-## add-on-event argsClick
+## add-on argsClick
 serverUsedoption = {
     "host": "localhost",
     "port": 8080,
@@ -40,5 +38,5 @@ serverUsedoption = {
 configure_server(serverUsedoption)
 ## end
 
-## mistake serverUsedoption
-## correct server_options
+## replace-inline _ serverUsedoption
+## with server_options

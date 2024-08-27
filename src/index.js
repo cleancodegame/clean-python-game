@@ -18,18 +18,61 @@ export let tasks = [];
 function parserFromPython(dataInArray) {
   let currentLine = 0;
   let lines = dataInArray;
-
+  let 
   function parseReplace() {
     // start parsing from lines[currentLine], increase currentLine,
     // return object describing the instruction
+    let initialCode = ""
+    let finalCode = ""
+    let lastCommand = ""
+    while (currentLine < lines.length) {
+      if (lines[currentLine] === "## replace") {
+        lastCommand = "replace"
+      }
+      else if (lines[currentLine] === "## with") {
+        lastCommand = "with"
+      }
+      else if (lines[currentLine] === "## end") {
+        break
+      }
+      else if (lastCommand === "replace") {
+        initialCode += lines[currentLine]
+      }
+      else {
+        finalCode += lines[currentLine]
+      }
+      currentLine += 1
+    }
     return {
-      actionType: "replace", // ??
+      actionType: "replace",
       eventId: "",
-      substring: null,
-      code: "",
+      substring: null, //?
+      code: finalCode,
+      replacementCode: initialCode,
+    };
+  }
+  function parseRemove() {
+    let initialCode = ""
+    while (currentLine < lines.length) {
+      if (lines[currentLine] === "## end") {
+        break
+      }
+      else {
+        initialCode += lines[currentLine]
+      }
+    }
+    return {
+      actionType: "remove",
+      eventId: "",
+      substring: null, //?
+      code: initialCode,
       replacementCode: "",
     };
   }
+  function parseAdd() {
+
+  }
+}
 
   // function parseAdd and others
 

@@ -1,6 +1,6 @@
 ## Task 9
 ## task9.py
-## add: Replace the repetitive if-else structure with a more scalable solution using dictionaries.
+# add: Replace the repetitive if-else structure with a more scalable solution using dictionaries.
 def get_product_details(product_id):
     ## remove
     if product_id == 1:

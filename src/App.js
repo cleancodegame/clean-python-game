@@ -4,7 +4,6 @@ import CodeEditor from './components/CodeEditor';
 import './App.css';
 
 // TODO move it to the App component state
-let selectedTaskIndex = 0
 
 const App = ({tasks}) => {
   //TODO: parseCode is strange name. It does a lot of very different things.

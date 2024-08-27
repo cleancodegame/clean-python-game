@@ -1,6 +1,6 @@
 ## Task 10
 ## task10.py
-#replace
+## replace
 def process_transaction(transaction_data):
     if transaction_data["type"] == "withdrawal":
         if transaction_data["amount"] > 0:
@@ -29,7 +29,7 @@ def process_transaction(transaction_data):
             print("Error: Invalid amount")
     else:
         print("Error: Unknown transaction type")
-#with
+## with
 class TransactionProcessor:
     FEES = {
         "USD": 5,
@@ -83,4 +83,4 @@ class TransactionProcessor:
     def print_error(self, message="Transaction failed"):
         print(f"Error: {message}")
 
-#end
+## end

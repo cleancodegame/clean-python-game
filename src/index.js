@@ -25,6 +25,8 @@ function parserFromPython(dataInArray) {
     let finalCode = ""
     let lastCommand = ""
     let eventId = ""
+    let substr = ""
+    let type = ""
     while (currentLine < lines.length) {
       if (lines[currentLine] === "## with") {
         lastCommand = "with"
@@ -33,7 +35,18 @@ function parserFromPython(dataInArray) {
         break
       }
       else if (lines[currentLine][0] + lines[currentLine][1] === "##") {
-        eventId = lines[currentLine].split(" ")[2]
+        let allWords = lines[currentLine].split(" ")
+        type = allWords[1]
+        let id = 2
+        eventId = lines[currentLine].split(" ")[id]
+        id += 1
+        while (id < allWords.length) {
+          if (substr.length !== 0) {
+            substr += " "
+          }
+          substr += allWords[id]
+          id += 1
+        }
         lastCommand = "replace"
       }
       else if (lastCommand === "replace") {
@@ -44,10 +57,11 @@ function parserFromPython(dataInArray) {
       }
       currentLine += 1
     }
+    currentLine += 1
     return {
-      actionType: "replace",
+      actionType: type,
       eventId: eventId,
-      substring: null, //?
+      substring: substr,
       code: initialCode,
       replacementCode: finalCode,
     };
@@ -55,6 +69,7 @@ function parserFromPython(dataInArray) {
   function parseRemove() {
     let initialCode = ""
     let eventId = ""
+    let type = ""
     while (currentLine < lines.length) {
       if (lines[currentLine] === "## end") {
         break
@@ -63,12 +78,15 @@ function parserFromPython(dataInArray) {
         initialCode += lines[currentLine]
       }
       else {
-        eventId = lines[currentLine].split(" ")[2]
+        let allWords = lines[currentLine].split(" ")
+        type = allWords[1]
+        eventId = allWords[2]
       }
       currentLine += 1
     }
+    currentLine += 1
     return {
-      actionType: "remove",
+      blockType: type,
       eventId: eventId,
       substring: null, //?
       code: initialCode,
@@ -78,6 +96,7 @@ function parserFromPython(dataInArray) {
   function parseAdd() {
     let finalCode = ""
     let eventId = ""
+    let type = ""
     while (currentLine < lines.length) {
       if (lines[currentLine] == "## end") {
         break
@@ -86,17 +105,69 @@ function parserFromPython(dataInArray) {
         finalCode += lines[currentLine]
       }
       else {
-        eventId = lines[currentLine].split(" ")[2]
+        let allWords = lines[currentLine].split(" ")
+        type = allWords[1]
+        eventId = allWords[2]
       }
       currentLine += 1
     }
+    currentLine += 1
     return {
-      actionType: "add",
+      actionType: type,
       eventId: eventId,
       substring: null, //?
       code: "",
       replacementCode: finalCode,
     };
+  }
+  function parseReplaceInline() {
+    let initialCode = ""
+    let eventId = ""
+    let finalCode = ""
+    let fstLine = lines[currentLine].split(" ")
+    currentLine += 1
+    eventId = fstLine[2]
+    let id = 3
+    while (id < fstLine.length) {
+      if (initialCode.length !== 0) {
+        initialCode += " "
+      }
+      initialCode += fstLine[id]
+      id += 1
+    }
+    id = 1
+    let sndLine = lines[currentLine].split(" ")
+    currentLine += 1
+    while (id < sndLine.length) {
+      if (finalCode.length !== 0) {
+        finalCode += " "
+      }
+      finalCode += sndLine[id]
+      id += 1
+    }
+    return {
+      actionType: "replace-inline",
+      eventId: eventId,
+      substring: null,
+      code: initialCode,
+      replacementCode: finalCode
+    }
+  }
+  function processRegions() {
+    let curLine = lines[currentLine].split(" ")
+    let essentialWord = curLine[1]
+    if (essentialWord === "replace" || essentialWord === "replace-on") {
+      return parseReplace()
+    }
+    else if (essentialWord === "remove" || essentialWord === "remove-on") {
+      return parseRemove()
+    }
+    else if (essentialWord == "replace-inline") {
+      return parseReplaceInline()
+    }
+    else {
+      return parseAdd()
+    }
   }
 
   // function parseAdd and others

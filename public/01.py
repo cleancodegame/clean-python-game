@@ -9,5 +9,5 @@
 def hello():
     BAD_VAriABLE_NAME = "Hello world!"
     print(BAD_VAriABLE_NAME)
-## mistake BAD_VAriABLE_NAME
-## correct greeting
+## replace-inline _ BAD_VAriABLE_NAME
+## with greeting

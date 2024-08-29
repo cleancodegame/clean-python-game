@@ -79,7 +79,7 @@ const App = ({tasks}) => {
 
   const handleTaskSelect = (index) => {
     setOfFixedErrors.clear()
-    selectedTaskIndex = index
+    taskIndex = index
     setRenamedVariables(tasks[index].bugs);
     setCompleted(false);
     setShowTerminal(false);
@@ -89,8 +89,8 @@ const App = ({tasks}) => {
 
   const handleVariableClick = (oldName) => {
     if (disabled) return;
-    if (oldName && tasks[selectedTaskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
-      const newName = tasks[selectedTaskIndex].bugs[oldName];
+    if (oldName && tasks[taskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
+      const newName = tasks[taskIndex].bugs[oldName];
       if (oldName === newName) {
        const newSet = setOfFixedErrors.add(oldName)
        updateSetOfFixedErrors(newSet)
@@ -99,9 +99,9 @@ const App = ({tasks}) => {
       const newSet = setOfFixedErrors.add(oldName)
       updateSetOfFixedErrors(newSet)
       }
-      if (setOfFixedErrors.size === tasks[selectedTaskIndex].number) {
+      if (setOfFixedErrors.size === tasks[taskIndex].number) {
         setCompleted(true);
-        setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
+        setCompletedTasks((prev) => [...prev, taskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
         setTerminalMessageColor('green');
         setShowTerminal(true);
@@ -122,8 +122,8 @@ const App = ({tasks}) => {
   };
 
   const handleNextTask = () => {
-    if (selectedTaskIndex < tasks.length - 1) {
-      handleTaskSelect(selectedTaskIndex + 1);
+    if (taskIndex < tasks.length - 1) {
+      handleTaskSelect(taskIndex + 1);
     } else {
       alert('You have completed all the tasks!');
     }
@@ -142,12 +142,12 @@ const App = ({tasks}) => {
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
-            <span>{tasks[selectedTaskIndex].fileName}</span>
+            <span>{tasks[taskIndex].fileName}</span>
           </div>
         </div>
 
         { /* TODO use renderCode here: */ }
-        <CodeEditor code={processCode(tasks[selectedTaskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={selectedTaskIndex} />
+        <CodeEditor code={processCode(tasks[taskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={taskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

@@ -17,50 +17,46 @@ TODO Review:
 function parsePythonLines(lines) {
   let currentLine = 0;
 
-  function parseReplace() {
-    // start parsing from lines[currentLine], increase currentLine,
-    // return object describing the instruction
-    let initialCode = "";
-    let finalCode = "";
-    let lastCommand = "";
-    let eventId = "";
-    let substr = "";
-    let type = "";
-    while (currentLine < lines.length) {
-      if (lines[currentLine] === "## with") {
-        lastCommand = "with";
-      } else if (lines[currentLine] === "## end") {
-        break;
-      } else if (lines[currentLine][0] + lines[currentLine][1] === "##") {
-        let allWords = lines[currentLine].split(" ");
-        type = allWords[1];
-        let id = 2;
-        eventId = lines[currentLine].split(" ")[id];
-        id += 1;
-        while (id < allWords.length) {
-          if (substr.length !== 0) {
-            substr += " ";
-          }
-          substr += allWords[id];
-          id += 1;
-        }
-        lastCommand = "replace";
-      } else if (lastCommand === "replace") {
-        initialCode += lines[currentLine];
-      } else {
-        finalCode += lines[currentLine];
-      }
-      currentLine += 1;
+
+  function parseUntilLine(endLine) {
+    let code = "";
+    while (currentLine < lines.length && lines[currentLine] !== endLine) {
+      code += lines[currentLine] + "\n";
+      currentLine++;
     }
-    currentLine += 1;
+    if (currentLine < lines.length)
+      currentLine++; // skip the endLine
+    return code;
+  }
+
+  function parseReplace() {
+    // ## replace-on event-id
+    // ...
+    // ## with
+    // ...
+    // ## end
+    // ## replace event-id [substring]
+    // ...
+    // ## with
+    // ...
+    // ## end
+    let instructionName = lines[currentLine].split(" ")[1];
+    let replaceArgs = parseInstruction("## " + instructionName, 2);
+    if (instructionName === "replace-on"){
+      if (replaceArgs.length != 1)
+        throw Error("Expected 1 argument for replace-on, got " + replaceArgs.length);
+    }
+    let initialCode = parseUntilLine("## with");
+    let finalCode = parseUntilLine("## end");
     return {
-      actionType: type,
-      eventId: eventId,
-      substring: substr,
+      actionType: instructionName,
+      eventId: replaceArgs[0],
+      substring: replaceArgs[1],
       code: initialCode,
       replacementCode: finalCode,
     };
   }
+
   function parseRemove() {
     let initialCode = "";
     let eventId = "";
@@ -112,20 +108,41 @@ function parsePythonLines(lines) {
     };
   }
 
-  function getInstructionArgs(instruction) {
+  function parseInstruction(instruction, argsCount) {
     const line = lines[currentLine];
     if (!line.startsWith(instruction))
       throw Error(
         "Expected instruction " + instruction + " but got " + lines[currentLine]
       );
-    return lines[currentLine].slice(instruction.length + 1);
+    currentLine++;
+    let argsLine = line.slice(instruction.length + 1);
+    let args = [];
+    for (let i = 0; i < argsCount-1; i++) {
+      let spaceIndex = argsLine.indexOf(" ");
+      if (spaceIndex === -1)
+        break;
+      args.push(argsLine.slice(0, spaceIndex));
+      argsLine = argsLine.slice(spaceIndex + 1);
+    }
+    args.push(argsLine);
+    return args;
+  }
+
+  function parseExplain() {
+    // ## explain event-id explanation
+    let args = parseInstruction("## explain", 2);
+    return {
+      actionType: "explain",
+      eventId: args[0],
+      explanation: args[1]
+    };
   }
 
   function parseReplaceInline() {
-    let replaceArgs = getInstructionArgs("## replace-inline").split(" ", 2);
-    currentLine++;
-    let replacementCode = getInstructionArgs("## with");
-    currentLine++;
+    // ## replace-inline event-id code
+    // ## with replacement
+    let replaceArgs = parseInstruction("## replace-inline", 2);
+    let replacementCode = parseInstruction("## with", 1);
     return {
       actionType: "replace-inline",
       eventId: replaceArgs[0],
@@ -153,6 +170,8 @@ function parsePythonLines(lines) {
       curLine.startsWith("## add-on ")
     ) {
       return parseAdd();
+    } else if (curLine.startsWith("## explain ")) {
+      return parseExplain();
     } else {
       let code = "";
       while (
@@ -210,7 +229,7 @@ async function loadTasksTo(fileNames, tasks) {
   }
 }
 
-await loadTasksTo(["01.py"], tasks);
+await loadTasksTo(["02.py"], tasks);
 
 root.render(
   <React.StrictMode>

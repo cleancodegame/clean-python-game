@@ -8,6 +8,9 @@ import './App.css';
 const App = ({tasks}) => {
   //TODO: parseCode is strange name. It does a lot of very different things.
   function processCode(code) {
+    if (typeof code == "undefined") {
+      return ""
+    }
     if (code.length === 0) {
       return ""
     }
@@ -79,7 +82,7 @@ const App = ({tasks}) => {
 
   const handleTaskSelect = (index) => {
     setOfFixedErrors.clear()
-    taskIndex = index
+    setTaskIndex(index)
     setRenamedVariables(tasks[index].bugs);
     setCompleted(false);
     setShowTerminal(false);

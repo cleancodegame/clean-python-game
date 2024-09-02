@@ -25,7 +25,7 @@ function parsePythonLines(lines) {
     let instructionName = lines[currentLine].split(" ")[1];
     let replaceArgs = parseInstruction("## " + instructionName, 2);
     if (instructionName === "replace-on"){
-      if (replaceArgs.length != 1)
+      if (replaceArgs.length !== 1)
         throw Error("Expected 1 argument for replace-on, got " + replaceArgs.length);
     }
     let initialCode = parseUntilLine("## with");
@@ -40,54 +40,28 @@ function parsePythonLines(lines) {
   }
 
   function parseRemove() {
-    let initialCode = "";
-    let eventId = "";
-    let type = "";
-    while (currentLine < lines.length) {
-      if (lines[currentLine] === "## end") {
-        break;
-      } else if (lines[currentLine][0] + lines[currentLine][1] !== "##") {
-        initialCode += lines[currentLine];
-      } else {
-        let allWords = lines[currentLine].split(" ");
-        type = allWords[1];
-        eventId = allWords[2];
-      }
-      currentLine += 1;
-    }
-    currentLine += 1;
+    let instructionName = lines[currentLine].split(" ")[1]
+    let replaceArgs = parseInstruction("## " + instructionName, 2)
+    let initialCode = parseUntilLine("## end")
     return {
-      blockType: type,
-      eventId: eventId,
-      substring: null, //?
+      actionType: instructionName,
+      eventId: replaceArgs[0],
+      substring: replaceArgs[1],
       code: initialCode,
-      replacementCode: "",
-    };
+      replacementCode: ""
+    }
   }
   function parseAdd() {
-    let finalCode = "";
-    let eventId = "";
-    let type = "";
-    while (currentLine < lines.length) {
-      if (lines[currentLine] === "## end") {
-        break;
-      } else if (lines[currentLine][0] + lines[currentLine][1] !== "##") {
-        finalCode += lines[currentLine];
-      } else {
-        let allWords = lines[currentLine].split(" ");
-        type = allWords[1];
-        eventId = allWords[2];
-      }
-      currentLine += 1;
-    }
-    currentLine += 1;
+    let instructionName = lines[currentLine].split(" ")[1];
+    let replaceArgs = parseInstruction("## " + instructionName, 1);
+    let addedCode = parseUntilLine("## end")
     return {
-      actionType: type,
-      eventId: eventId,
-      substring: null, //?
+      actionType: instructionName,
+      eventId: replaceArgs[0],
+      substring: null,
       code: "",
-      replacementCode: finalCode,
-    };
+      replacementCode: addedCode
+    }
   }
 
   function parseInstruction(instruction, argsCount) {

@@ -2,60 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import CodeEditor from './components/CodeEditor';
 import './App.css';
+import { formatTask, getEventRegions } from './codeTasks';
 
 // TODO move it to the App component state
 
 const App = ({tasks}) => {
-  //TODO: parseCode is strange name. It does a lot of very different things.
-  function processCode(code) {
-    if (typeof code == "undefined") {
-      return ""
-    }
-    if (code.length === 0) {
-      return ""
-    }
-    // TODO: function named parseCode is wrong place for this code.
-    if (wrongClickCount >= 5) {
-      setTimeout(() => {
-        setTerminalMessage('You clicked wrong too many times! Restarting the game...');
-        setTerminalMessageColor('red');
-        setShowTerminal(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      }, 5100);
-    }
-    const map = code.map(item => (typeof item === 'string' ? item : (setOfFixedErrors.has(item.error) ? item.fixed : item.initial)))
-    let answer = ""
-    for (const item of map) {
-      let line = item
-      for (const changedVariable of setOfFixedErrors) {
-        line = line.replaceAll(new RegExp(`\\b${changedVariable}\\b`, 'g'), renamedVariables[changedVariable])
-      }
-      answer += line + '\n'
-    }
-    return answer
-  }
-
-
-  function renderCode(task, eventsHappened){
-    // renders all the blocks from task.blocks according to eventsHappened
-    return {
-      code: "code to display",
-      codemap: [
-        {startIndex: 1, endIndex: 20, eventId: "badNameClick"},
-        // ...
-      ]
-
-    };
-  }
 
   const [taskIndex, setTaskIndex] = useState(0)
   const [eventsHappened, setEventsHappened] = useState([])  
-  //TODO: next two states should not be used:
-  const [setOfFixedErrors, updateSetOfFixedErrors] = useState(new Set())  
-  const [renamedVariables, setRenamedVariables] = useState(tasks[0].bugs);
-
   const [wrongClickCount, setWrongClickCount] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -81,17 +35,31 @@ const App = ({tasks}) => {
   }, [disabled, timer]);
 
   const handleTaskSelect = (index) => {
-    setOfFixedErrors.clear()
-    setTaskIndex(index)
-    setRenamedVariables(tasks[index].bugs);
+    setEventsHappened([]);
+    setTaskIndex(index);
     setCompleted(false);
     setShowTerminal(false);
     setDisabled(false);
     setWrongClickCount(0);
   };
 
-  const handleVariableClick = (oldName) => {
+  const handleVariableClick = (clickedPosition) => {
     if (disabled) return;
+
+    let regions = getEventRegions(tasks[taskIndex], eventsHappened);
+
+    // TODO:
+    // find the region that contains the clickedPosition
+    // add corresponding event to eventsHappened with setEventsHappened(...)
+    // if the event is not found, show an error message in the terminal 
+    //    and increment wrongClickCount 
+    //    and disable the editor for 3 seconds
+
+    
+
+
+
+/*
     if (oldName && tasks[taskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
       const newName = tasks[taskIndex].bugs[oldName];
       if (oldName === newName) {
@@ -122,6 +90,7 @@ const App = ({tasks}) => {
         setShowTerminal(true);
       }, 3000);
     }
+      */
   };
 
   const handleNextTask = () => {
@@ -136,6 +105,8 @@ const App = ({tasks}) => {
     setShowTerminal(false);
   };
 
+  let code = formatTask(tasks[taskIndex], eventsHappened);
+
   return (
     <div className="app">
       <Sidebar tasks={tasks.map((task, index) => ({
@@ -149,8 +120,7 @@ const App = ({tasks}) => {
           </div>
         </div>
 
-        { /* TODO use renderCode here: */ }
-        <CodeEditor code={processCode(tasks[taskIndex].code)} onVariableClick={handleVariableClick} disabled={disabled} levelId={taskIndex} />
+        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} levelId={taskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

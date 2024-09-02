@@ -175,27 +175,9 @@ async function loadTask(fileName) {
   return parsePythonLines(lines);
 }
 
-function formatTaks(task) {
-  let result = task.title + "\n" + task.filename + "\n";
-  for (const block of task.blocks) {
-    if (block.actionType === "text")
-      result += block.code
-    else if (block.actionType === "replace" 
-      || block.actionType === "replace-on" 
-      || block.actionType === "remove"
-      || block.actionType === "remove-on"
-      || block.actionType === "text"
-    ) {
-      result += block.code;
-    }
-    return result;
-  }
-}
-
 export async function loadTasksTo(fileNames, tasks) {
   for (const curFile of fileNames) {
     let task = await loadTask(curFile);
-    console.log(formatTaks(task));
     tasks.push(task);
   }
 }

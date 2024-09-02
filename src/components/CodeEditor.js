@@ -50,18 +50,7 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
         onVariableClick(null);
         return;
       }
-
-      const word = editor.getModel().getWordAtPosition(position);
-      if (word) {
-        const variableName = editor.getModel().getValueInRange({
-          startLineNumber: position.lineNumber,
-          startColumn: word.startColumn,
-          endLineNumber: position.lineNumber,
-          endColumn: word.endColumn,
-        });
-        onVariableClick(variableName);
-        // TODO: onEvent(eventId), where eventId is acalculated with e.target.position and task.codemap
-      }
+      onVariableClick(position);
     });
 
     editor.onDidChangeCursorSelection((e) => {

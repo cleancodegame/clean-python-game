@@ -3,11 +3,15 @@
 ## replace import sys, os, json, time
 import sys, os, json, time
 ## with
-import sys\nimport os\nimport json\nimport time
+import sys
+import os
+import json
+import time
 ## end
 ## replace from math import pi, sqrt
 from math import pi, sqrt
 ## with
-from math import pi\nfrom math import sqrt
+from math import pi
+from math import sqrt
 ## end
 

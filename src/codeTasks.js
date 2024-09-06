@@ -1,4 +1,4 @@
-function processWithReplaceInline(text, eventsHappened) {
+function processWithReplaceInline(text, eventsHappened, task) {
   let i = 0;
   let processedText = "";
 
@@ -13,7 +13,7 @@ function processWithReplaceInline(text, eventsHappened) {
       const pattern = inlineReplaceBlock.code;
       const replacement = inlineReplaceBlock.replacementCode;
       if (i + pattern.length < text.length) {
-        if (text.substring(i, i + patter.length) === pattern) {
+        if (text.substring(i, i + pattern.length) === pattern) {
           processedText += replacement;
           i += pattern.length;
           hasReplacement = true;
@@ -33,7 +33,7 @@ export function formatTask(task, eventsHappened) {
   let result = "";
   for (const block of task.blocks) {
     if (block.actionType === "text")
-      result += processWithReplaceInline(block.code, eventsHappened);
+      result += processWithReplaceInline(block.code, eventsHappened, task);
     else if (
       block.actionType === "replace" ||
       block.actionType === "replace-on" ||
@@ -41,10 +41,10 @@ export function formatTask(task, eventsHappened) {
       block.actionType === "remove-on" ||
       block.actionType === "add-on"
     ) {
-      if (block.eventId in eventsHappened) {
-        result += processWithReplaceInline(block.replacementCode, eventsHappened);
+      if (eventsHappened.indexOf(block.eventId) >= 0) {
+        result += processWithReplaceInline(block.replacementCode, eventsHappened, task);
       } else {
-        result += processWithReplaceInline(block.code, eventsHappened);
+        result += processWithReplaceInline(block.code, eventsHappened, task);
       }
     }
     else if (block.actionType === "replace-inline" || block.actionType === "explain") {

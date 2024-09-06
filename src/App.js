@@ -45,7 +45,7 @@ const App = ({tasks}) => {
   const handleCodeClick = (clickedPosition) => {
     if (disabled) return;
   
-    const task = tasks[selectedTaskIndex];
+    const task = tasks[taskIndex];
     // TODO:
     // run getEventRegions(task, eventsHappened) to get currect set of clickable regions
     // find the region among them that contains the clickedPosition
@@ -53,57 +53,59 @@ const App = ({tasks}) => {
     // if the event is not found, show an error message in the terminal 
     //    and increment wrongClickCount 
     //    and disable the editor for 3 seconds
+    setEventsHappened([...eventsHappened, "uppercase_click"]);
+    return;
 
 
-    const blockRegex = /## replace[\s\S]*?## with/;
-    const codeBlockMatch = task.code.join('\n').match(blockRegex);
+    // const blockRegex = /## replace[\s\S]*?## with/;
+    // const codeBlockMatch = task.code.join('\n').match(blockRegex);
   
-    if (codeBlockMatch) {
-      const codeBlock = codeBlockMatch[0];
+    // if (codeBlockMatch) {
+    //   const codeBlock = codeBlockMatch[0];
   
-      if (codeBlock.includes(clickedPosition) && task.bugs[clickedPosition]) {
-        const newVariableName = task.bugs[clickedPosition];
+    //   if (codeBlock.includes(clickedPosition) && task.bugs[clickedPosition]) {
+    //     const newVariableName = task.bugs[clickedPosition];
   
-        eventsHappened.add(clickedPosition);
-        setOfFixedErrors(eventsHappened);
-        setRenamed((prev) => ({ ...prev, [clickedPosition]: true }));
+    //     eventsHappened.add(clickedPosition);
+    //     setOfFixedErrors(eventsHappened);
+    //     setRenamed((prev) => ({ ...prev, [clickedPosition]: true }));
   
-        const newFinalCode = parseCode(task.code);
-        setCode(newFinalCode);
+    //     const newFinalCode = parseCode(task.code);
+    //     setCode(newFinalCode);
   
-        if (eventsHappened.size === task.number) {
-          setCompleted(true);
-          setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
-          setTerminalMessage('Success: All variables have been renamed!');
-          setTerminalMessageColor('green');
-          setShowTerminal(true);
-        }
-      } else {
-        setTerminalMessage('Error: You clicked on the wrong place.');
-        setTerminalMessageColor('red');
-        setShowTerminal(true);
+    //     if (eventsHappened.size === task.number) {
+    //       setCompleted(true);
+    //       setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
+    //       setTerminalMessage('Success: All variables have been renamed!');
+    //       setTerminalMessageColor('green');
+    //       setShowTerminal(true);
+    //     }
+    //   } else {
+    //     setTerminalMessage('Error: You clicked on the wrong place.');
+    //     setTerminalMessageColor('red');
+    //     setShowTerminal(true);
   
-        setWrongClickCount((prev) => prev + 1);
-        setDisabled(true);
-        setTimer(3);
+    //     setWrongClickCount((prev) => prev + 1);
+    //     setDisabled(true);
+    //     setTimer(3);
   
-        setTimeout(() => {
-          setDisabled(false);
-          setShowTerminal(false);
-        }, 3000);
-      }
-    } else {
-      //TODO remove that
-      setTerminalMessage('Error: No valid replace block found.');
-      setTerminalMessageColor('red');
-      setShowTerminal(true);
-      setDisabled(true);
+    //     setTimeout(() => {
+    //       setDisabled(false);
+    //       setShowTerminal(false);
+    //     }, 3000);
+    //   }
+    // } else {
+    //   //TODO remove that
+    //   setTerminalMessage('Error: No valid replace block found.');
+    //   setTerminalMessageColor('red');
+    //   setShowTerminal(true);
+    //   setDisabled(true);
   
-      setTimeout(() => {
-        setDisabled(false);
-        setShowTerminal(false);
-      }, 3000);
-    }
+    //   setTimeout(() => {
+    //     setDisabled(false);
+    //     setShowTerminal(false);
+    //   }, 3000);
+    // }
   };
   
   

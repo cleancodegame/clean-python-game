@@ -43,55 +43,54 @@ const App = ({tasks}) => {
     setWrongClickCount(0);
   };
 
-  const handleVariableClick = (clickedPosition) => {
+  const handleVariableClick = (clickedVariable) => {
     if (disabled) return;
-
-    let regions = getEventRegions(tasks[taskIndex], eventsHappened);
-
+  
     // TODO:
     // find the region that contains the clickedPosition
-    // add corresponding event to eventsHappened with setEventsHappened(...)
-    // if the event is not found, show an error message in the terminal 
-    //    and increment wrongClickCount 
-    //    and disable the editor for 3 seconds
-
-    
-
-
-
-/*
-    if (oldName && tasks[taskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
-      const newName = tasks[taskIndex].bugs[oldName];
-      if (oldName === newName) {
-       const newSet = setOfFixedErrors.add(oldName)
-       updateSetOfFixedErrors(newSet)
-      }
-      else {
-      const newSet = setOfFixedErrors.add(oldName)
-      updateSetOfFixedErrors(newSet)
-      }
-      if (setOfFixedErrors.size === tasks[taskIndex].number) {
+    const task = tasks[selectedTaskIndex];
+    const eventsHappened = new Set([...set]); // Clone the existing set of eventsHappened
+  
+    if (clickedVariable && task.bugs[clickedVariable]) {
+      const newVariableName = task.bugs[clickedVariable];
+      
+      // Add corresponding event to eventsHappened
+      eventsHappened.add(clickedVariable);
+      setOfFixedErrors(eventsHappened);
+      setRenamed((prev) => ({ ...prev, [clickedVariable]: true }));
+  
+      // Update the code with renamed variables
+      const newFinalCode = parseCode(task.code);
+      setCode(newFinalCode);
+  
+      // Check if all variables are renamed
+      if (eventsHappened.size === task.number) {
         setCompleted(true);
-        setCompletedTasks((prev) => [...prev, taskIndex]);
+        setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
         setTerminalMessage('Success: All variables have been renamed!');
         setTerminalMessageColor('green');
         setShowTerminal(true);
       }
     } else {
+      // Event not found, show an error message in the terminal
       setTerminalMessage('Error: You clicked on the wrong place.');
-      setTerminalMessageColor('yellow');
+      setTerminalMessageColor('red');
       setShowTerminal(true);
+  
+      // Increment wrongClickCount
+      setWrongClickCount((prev) => prev + 1);
+  
+      // Disable the editor for 3 seconds
       setDisabled(true);
       setTimer(3);
-      setWrongClickCount((prev) => prev + 1);
-
+      
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(true);
+        setShowTerminal(false);
       }, 3000);
     }
-      */
   };
+  
 
   const handleNextTask = () => {
     if (taskIndex < tasks.length - 1) {

@@ -46,50 +46,59 @@ const App = ({tasks}) => {
   const handleVariableClick = (clickedVariable) => {
     if (disabled) return;
   
-    // TODO:
-    // find the region that contains the clickedPosition
     const task = tasks[selectedTaskIndex];
-    const eventsHappened = new Set([...set]); // Clone the existing set of eventsHappened
+    const eventsHappened = new Set([...set]);
   
-    if (clickedVariable && task.bugs[clickedVariable]) {
-      const newVariableName = task.bugs[clickedVariable];
-      
-      // Add corresponding event to eventsHappened
-      eventsHappened.add(clickedVariable);
-      setOfFixedErrors(eventsHappened);
-      setRenamed((prev) => ({ ...prev, [clickedVariable]: true }));
+    const blockRegex = /## replace[\s\S]*?## with/;
+    const codeBlockMatch = task.code.join('\n').match(blockRegex);
   
-      // Update the code with renamed variables
-      const newFinalCode = parseCode(task.code);
-      setCode(newFinalCode);
+    if (codeBlockMatch) {
+      const codeBlock = codeBlockMatch[0];
   
-      // Check if all variables are renamed
-      if (eventsHappened.size === task.number) {
-        setCompleted(true);
-        setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
-        setTerminalMessage('Success: All variables have been renamed!');
-        setTerminalMessageColor('green');
+      if (codeBlock.includes(clickedVariable) && task.bugs[clickedVariable]) {
+        const newVariableName = task.bugs[clickedVariable];
+  
+        eventsHappened.add(clickedVariable);
+        setOfFixedErrors(eventsHappened);
+        setRenamed((prev) => ({ ...prev, [clickedVariable]: true }));
+  
+        const newFinalCode = parseCode(task.code);
+        setCode(newFinalCode);
+  
+        if (eventsHappened.size === task.number) {
+          setCompleted(true);
+          setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
+          setTerminalMessage('Success: All variables have been renamed!');
+          setTerminalMessageColor('green');
+          setShowTerminal(true);
+        }
+      } else {
+        setTerminalMessage('Error: You clicked on the wrong place.');
+        setTerminalMessageColor('red');
         setShowTerminal(true);
+  
+        setWrongClickCount((prev) => prev + 1);
+        setDisabled(true);
+        setTimer(3);
+  
+        setTimeout(() => {
+          setDisabled(false);
+          setShowTerminal(false);
+        }, 3000);
       }
     } else {
-      // Event not found, show an error message in the terminal
-      setTerminalMessage('Error: You clicked on the wrong place.');
+      setTerminalMessage('Error: No valid replace block found.');
       setTerminalMessageColor('red');
       setShowTerminal(true);
-  
-      // Increment wrongClickCount
-      setWrongClickCount((prev) => prev + 1);
-  
-      // Disable the editor for 3 seconds
       setDisabled(true);
-      setTimer(3);
-      
+  
       setTimeout(() => {
         setDisabled(false);
         setShowTerminal(false);
       }, 3000);
     }
   };
+  
   
 
   const handleNextTask = () => {

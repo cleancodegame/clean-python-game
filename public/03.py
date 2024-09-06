@@ -1,8 +1,10 @@
-## Task 2
-## task2.py
-class LongMethodNames:
+# TODO: Change the tasks name to be more descriptive. Change the code scenario.
+
+## Task 3
+## task3.py
+class BankTrasferInterestCalculator:
   def long_method_name_one(self, x):
-    return x+1
+    return x + 1
 
   def long_method_name_two(self, y):
     return y - 1

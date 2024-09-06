@@ -3,7 +3,6 @@
 
 #VH
 
-
 def apply_discount(cart, discount):
     total_discount = 0
     for item in cart:

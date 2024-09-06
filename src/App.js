@@ -42,55 +42,71 @@ const App = ({tasks}) => {
     setWrongClickCount(0);
   };
 
-  const handleVariableClick = (clickedPosition) => {
+  const handleCodeClick = (clickedPosition) => {
     if (disabled) return;
-
-    let regions = getEventRegions(tasks[taskIndex], eventsHappened);
-
+  
+    const task = tasks[selectedTaskIndex];
     // TODO:
-    // find the region that contains the clickedPosition
+    // run getEventRegions(task, eventsHappened) to get currect set of clickable regions
+    // find the region among them that contains the clickedPosition
     // add corresponding event to eventsHappened with setEventsHappened(...)
     // if the event is not found, show an error message in the terminal 
     //    and increment wrongClickCount 
     //    and disable the editor for 3 seconds
 
-    
 
-
-
-/*
-    if (oldName && tasks[taskIndex].bugs[oldName] && !setOfFixedErrors.has(oldName)) {
-      const newName = tasks[taskIndex].bugs[oldName];
-      if (oldName === newName) {
-       const newSet = setOfFixedErrors.add(oldName)
-       updateSetOfFixedErrors(newSet)
-      }
-      else {
-      const newSet = setOfFixedErrors.add(oldName)
-      updateSetOfFixedErrors(newSet)
-      }
-      if (setOfFixedErrors.size === tasks[taskIndex].number) {
-        setCompleted(true);
-        setCompletedTasks((prev) => [...prev, taskIndex]);
-        setTerminalMessage('Success: All variables have been renamed!');
-        setTerminalMessageColor('green');
+    const blockRegex = /## replace[\s\S]*?## with/;
+    const codeBlockMatch = task.code.join('\n').match(blockRegex);
+  
+    if (codeBlockMatch) {
+      const codeBlock = codeBlockMatch[0];
+  
+      if (codeBlock.includes(clickedPosition) && task.bugs[clickedPosition]) {
+        const newVariableName = task.bugs[clickedPosition];
+  
+        eventsHappened.add(clickedPosition);
+        setOfFixedErrors(eventsHappened);
+        setRenamed((prev) => ({ ...prev, [clickedPosition]: true }));
+  
+        const newFinalCode = parseCode(task.code);
+        setCode(newFinalCode);
+  
+        if (eventsHappened.size === task.number) {
+          setCompleted(true);
+          setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
+          setTerminalMessage('Success: All variables have been renamed!');
+          setTerminalMessageColor('green');
+          setShowTerminal(true);
+        }
+      } else {
+        setTerminalMessage('Error: You clicked on the wrong place.');
+        setTerminalMessageColor('red');
         setShowTerminal(true);
+  
+        setWrongClickCount((prev) => prev + 1);
+        setDisabled(true);
+        setTimer(3);
+  
+        setTimeout(() => {
+          setDisabled(false);
+          setShowTerminal(false);
+        }, 3000);
       }
     } else {
-      setTerminalMessage('Error: You clicked on the wrong place.');
-      setTerminalMessageColor('yellow');
+      //TODO remove that
+      setTerminalMessage('Error: No valid replace block found.');
+      setTerminalMessageColor('red');
       setShowTerminal(true);
       setDisabled(true);
-      setTimer(3);
-      setWrongClickCount((prev) => prev + 1);
-
+  
       setTimeout(() => {
         setDisabled(false);
-        setShowTerminal(true);
+        setShowTerminal(false);
       }, 3000);
     }
-      */
   };
+  
+  
 
   const handleNextTask = () => {
     if (taskIndex < tasks.length - 1) {
@@ -119,7 +135,7 @@ const App = ({tasks}) => {
           </div>
         </div>
 
-        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} levelId={taskIndex} />
+        <CodeEditor code={code} onCodeClick={handleCodeClick} disabled={disabled} levelId={taskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

@@ -4,7 +4,6 @@ import CodeEditor from './components/CodeEditor';
 import './App.css';
 import { formatTask, getEventRegions } from './codeTasks';
 
-// TODO move it to the App component state
 
 const App = ({tasks}) => {
 

@@ -1,20 +1,48 @@
+function processWithReplaceInline(text, eventsHappened) {
+  let id = 0
+  let processedText = ""
+  while (id < text.length) {
+    let hasEvents = false
+    for (const block of task.blocks) {
+     if (block.actionType === "replace-inline" && id + block.code.length < text.length && block.eventId in eventsHappened) {
+      if (text.substring(id, id + block.code.length) === block.code) {
+        processedText += block.replacementCode
+        id += block.code.length
+        hasEvents = true
+        break
+      }
+     }
+    }
+    if (!hasEvents) {
+      processedText += text[id]
+      id += 1
+    }
+  }
+  return processedText
+}
 
 export function formatTask(task, eventsHappened) {
   let result = ""
   for (const block of task.blocks) {
     if (block.actionType === "text")
-      result += block.code
+      result += processWithReplaceInline(block.code, eventsHappened)
     else if (block.actionType === "replace" 
       || block.actionType === "replace-on" 
       || block.actionType === "remove"
       || block.actionType === "remove-on"
-      || block.actionType === "text"
-    ) {
-      //TODO: use block.code OR block.replacementCode depending on whether event happened
+    )
+    {
+      if (task.eventId in eventsHappened) {
+          result += block.replacementCode;
+    }
+    else {
       result += block.code;
     }
-    return result;
   }
+  }
+  //DONE
+  //TODO: implement replace-inline (create a region for all substrings)
+  return result;
 }
 
 export function getEventRegions(task, eventsHappened){

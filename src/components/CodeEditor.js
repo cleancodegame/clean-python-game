@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import MonacoEditor, { loader } from '@monaco-editor/react';
 import './CodeEditor.css';
 
-const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
+const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
   const [lastIndex, setLastIndex] = useState(0)
   const editorRef = useRef(null);
 
@@ -47,10 +47,10 @@ const CodeEditor = ({ code, onVariableClick, disabled, levelId }) => {
 
       const position = e.target.position;
       if (!position) {
-        onVariableClick(null);
+        onCodeClick(null);
         return;
       }
-      onVariableClick(position);
+      onCodeClick(position);
     });
 
     editor.onDidChangeCursorSelection((e) => {

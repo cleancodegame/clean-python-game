@@ -43,24 +43,31 @@ const App = ({tasks}) => {
     setWrongClickCount(0);
   };
 
-  const handleVariableClick = (clickedVariable) => {
+  const handleCodeClick = (clickedPosition) => {
     if (disabled) return;
   
     const task = tasks[selectedTaskIndex];
-    const eventsHappened = new Set([...set]);
-  
+    // TODO:
+    // run getEventRegions(task, eventsHappened) to get currect set of clickable regions
+    // find the region among them that contains the clickedPosition
+    // add corresponding event to eventsHappened with setEventsHappened(...)
+    // if the event is not found, show an error message in the terminal 
+    //    and increment wrongClickCount 
+    //    and disable the editor for 3 seconds
+
+
     const blockRegex = /## replace[\s\S]*?## with/;
     const codeBlockMatch = task.code.join('\n').match(blockRegex);
   
     if (codeBlockMatch) {
       const codeBlock = codeBlockMatch[0];
   
-      if (codeBlock.includes(clickedVariable) && task.bugs[clickedVariable]) {
-        const newVariableName = task.bugs[clickedVariable];
+      if (codeBlock.includes(clickedPosition) && task.bugs[clickedPosition]) {
+        const newVariableName = task.bugs[clickedPosition];
   
-        eventsHappened.add(clickedVariable);
+        eventsHappened.add(clickedPosition);
         setOfFixedErrors(eventsHappened);
-        setRenamed((prev) => ({ ...prev, [clickedVariable]: true }));
+        setRenamed((prev) => ({ ...prev, [clickedPosition]: true }));
   
         const newFinalCode = parseCode(task.code);
         setCode(newFinalCode);
@@ -87,6 +94,7 @@ const App = ({tasks}) => {
         }, 3000);
       }
     } else {
+      //TODO remove that
       setTerminalMessage('Error: No valid replace block found.');
       setTerminalMessageColor('red');
       setShowTerminal(true);
@@ -128,7 +136,7 @@ const App = ({tasks}) => {
           </div>
         </div>
 
-        <CodeEditor code={code} onVariableClick={handleVariableClick} disabled={disabled} levelId={taskIndex} />
+        <CodeEditor code={code} onCodeClick={handleCodeClick} disabled={disabled} levelId={taskIndex} />
         {showTerminal && (
           <div className="terminal">
             <button className="close-button" onClick={handleCloseTerminal}>x</button>

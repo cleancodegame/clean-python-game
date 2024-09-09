@@ -4,7 +4,7 @@ function processWithReplaceInline(text, eventsHappened, task) {
 
   let inlineReplaceBlocks = task.blocks.filter(
     b => b.actionType === "replace-inline"
-      && b.eventId in eventsHappened
+      && eventsHappened.includes(b.eventId)
   );
 
   while (i < text.length) {
@@ -61,12 +61,18 @@ export function getEventRegions(task, eventsHappened) {
   let eventRegions = [];
   for (const block of task.blocks) {
     if (block.actionType === "text") curLine += block.code.split("\n").length;
-    else if (block.actionType === "replace" || block.actionType === "remove" || block.actionType === "remove-on" || block.actionType === "replace-on" || block.actionType === "add" || block.actionType === "add-on") {
-      if (block.eventId in eventsHappened) {
-        curLine += block.replacementCode.split("\n").length;
+    else if (block.actionType === "replace" || block.actionType === "remove" 
+      || block.actionType === "remove-on" || block.actionType === "replace-on" 
+      || block.actionType === "add" || block.actionType === "add-on") {
+      //let code = processWithReplaceInline(block.code, eventsHappened, task);
+      //let replacementCode = processWithReplaceInline(block.replacementCode, eventsHappened, task);
+      let code = block.code;
+      let replacementCode = block.replacementCode;
+      if (eventsHappened.includes(block.eventId)) {
+        curLine += replacementCode.split("\n").length;
       } else {
+        let blockLines = code.split("\n");
         if (block.substring === null) {
-          let blockLines = block.code.split("\n");
           let eventRegion = {
             startLine: curLine,
             startColumn: 1,
@@ -77,7 +83,6 @@ export function getEventRegions(task, eventsHappened) {
           eventRegions.push(eventRegion);
         }
         else {
-          let blockLines = block.code.split("\n")
           for (const line of blockLines) {
             let i = 0
             while (i + block.substring.length <= line.length) {
@@ -98,12 +103,10 @@ export function getEventRegions(task, eventsHappened) {
             }
           }
         }
-        if (block.actionType === "replace" || block.actionType === "remove" || block.actionType === "add") {
-          curLine += block.code.split("\n").length;
-        }
+        curLine += code.split("\n").length;
       }
     }
-    else if (block.actionType === "replace-inline") {
+    else if (block.actionType === "replace-inline" && !eventsHappened.includes(block.eventId)) {
       for (const anotherBlock of task.blocks) {
         let blockLines = anotherBlock.code.split("\n")
         for (const line of blockLines) {
@@ -127,9 +130,6 @@ export function getEventRegions(task, eventsHappened) {
         }
       }
     }
-    //TODO: implement replace-on, remove-on, add-on (only update curLine if event happened)
-    //TODO: implement replace-inline (create a region for all substrings)
-    //TODO: implement remove (create a region same as with replace)
   }
   return eventRegions;
 }

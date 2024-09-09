@@ -3,16 +3,16 @@ function processWithReplaceInline(text, eventsHappened, task) {
   let processedText = "";
 
   let inlineReplaceBlocks = task.blocks.filter(
-    b => b.actionType === "replace-inline" 
-    && b.eventId in eventsHappened
-  ); 
+    b => b.actionType === "replace-inline"
+      && b.eventId in eventsHappened
+  );
 
   while (i < text.length) {
     let hasReplacement = false;
     for (const inlineReplaceBlock of inlineReplaceBlocks) {
       const pattern = inlineReplaceBlock.code;
       const replacement = inlineReplaceBlock.replacementCode;
-      if (i + pattern.length < text.length) {
+      if (i + pattern.length <= text.length) {
         if (text.substring(i, i + pattern.length) === pattern) {
           processedText += replacement;
           i += pattern.length;
@@ -50,18 +50,18 @@ export function formatTask(task, eventsHappened) {
     else if (block.actionType === "replace-inline" || block.actionType === "explain") {
       // do nothing
     }
-    else 
+    else
       throw new Error("Unknown block type: " + block.actionType);
   }
   return result;
 }
 
 export function getEventRegions(task, eventsHappened) {
-  let curLine = 1;
+  let curLine = 2;
   let eventRegions = [];
   for (const block of task.blocks) {
     if (block.actionType === "text") curLine += block.code.split("\n").length;
-    else if (block.actionType === "replace") {
+    else if (block.actionType === "replace" || block.actionType === "remove" || block.actionType === "remove-on" || block.actionType === "replace-on" || block.actionType === "add" || block.actionType === "add-on") {
       if (block.eventId in eventsHappened) {
         curLine += block.replacementCode.split("\n").length;
       } else {
@@ -76,8 +76,55 @@ export function getEventRegions(task, eventsHappened) {
           };
           eventRegions.push(eventRegion);
         }
-        //TODO: implement substring != null
-        curLine += block.code.split("\n").length;
+        else {
+          let blockLines = block.code.split("\n")
+          for (const line of blockLines) {
+            let i = 0
+            while (i + block.substring.length <= line.length) {
+              if (line.substring(i, i + block.substring.length) === block.substring) {
+                let eventRegion = {
+                  startLine: curLine,
+                  startColumn: i,
+                  endLine: curLine,
+                  endColumn: i + block.substring.length - 1,
+                  eventId: block.eventId
+                }
+                i += block.substring.length
+                eventRegions.push(eventRegion)
+              }
+              else {
+                i += 1
+              }
+            }
+          }
+        }
+        if (block.actionType === "replace" || block.actionType === "remove" || block.actionType === "add") {
+          curLine += block.code.split("\n").length;
+        }
+      }
+    }
+    else if (block.actionType === "replace-inline") {
+      for (const anotherBlock of task.blocks) {
+        let blockLines = anotherBlock.code.split("\n")
+        for (const line of blockLines) {
+          let i = 0
+          while (i + block.substring.length <= line.length) {
+            if (line.substring(i, i + block.substring.length) === block.substring) {
+              let eventRegion = {
+                startLine: curLine,
+                startColumn: i,
+                endLine: curLine,
+                endColumn: i + block.substring.length - 1,
+                eventId: block.eventId
+              }
+              i += block.substring.length
+              eventRegions.push(eventRegion)
+            }
+            else {
+              i += 1
+            }
+          }
+        }
       }
     }
     //TODO: implement replace-on, remove-on, add-on (only update curLine if event happened)

@@ -58,7 +58,7 @@ function parsePythonLines(lines) {
     return {
       actionType: instructionName,
       eventId: replaceArgs[0],
-      substring: null,
+      substring: undefined,
       code: "",
       replacementCode: addedCode
     }
@@ -75,8 +75,9 @@ function parsePythonLines(lines) {
     let args = [];
     for (let i = 0; i < argsCount-1; i++) {
       let spaceIndex = argsLine.indexOf(" ");
-      if (spaceIndex === -1)
+      if (spaceIndex === -1){
         break;
+      }
       args.push(argsLine.slice(0, spaceIndex));
       argsLine = argsLine.slice(spaceIndex + 1);
     }
@@ -98,13 +99,13 @@ function parsePythonLines(lines) {
     // ## replace-inline event-id code
     // ## with replacement
     let replaceArgs = parseInstruction("## replace-inline", 2);
-    let replacementCode = parseInstruction("## with", 1);
+    let withArgs = parseInstruction("## with", 1);
     return {
       actionType: "replace-inline",
       eventId: replaceArgs[0],
-      substring: null,
+      substring: undefined,
       code: replaceArgs[1],
-      replacementCode: replacementCode,
+      replacementCode: withArgs[0],
     };
   }
   function parseBlock() {

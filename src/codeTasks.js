@@ -72,7 +72,7 @@ export function getEventRegions(task, eventsHappened) {
         curLine += replacementCode.split("\n").length;
       } else {
         let blockLines = code.split("\n");
-        if (block.substring === null) {
+        if (block.substring === undefined) {
           let eventRegion = {
             startLine: curLine,
             startColumn: 1,
@@ -108,19 +108,20 @@ export function getEventRegions(task, eventsHappened) {
     }
     else if (block.actionType === "replace-inline" && !eventsHappened.includes(block.eventId)) {
       for (const anotherBlock of task.blocks) {
+        if (anotherBlock.code === undefined) continue;
         let blockLines = anotherBlock.code.split("\n")
         for (const line of blockLines) {
           let i = 0
-          while (i + block.substring.length <= line.length) {
-            if (line.substring(i, i + block.substring.length) === block.substring) {
+          while (i + block.code.length <= line.length) {
+            if (line.substring(i, i + block.code.length) === block.code) {
               let eventRegion = {
                 startLine: curLine,
                 startColumn: i,
                 endLine: curLine,
-                endColumn: i + block.substring.length - 1,
+                endColumn: i + block.code.length - 1,
                 eventId: block.eventId
               }
-              i += block.substring.length
+              i += block.code.length
               eventRegions.push(eventRegion)
             }
             else {

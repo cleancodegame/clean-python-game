@@ -57,7 +57,7 @@ export function formatTask(task, eventsHappened) {
 }
 
 export function getEventRegions(task, eventsHappened) {
-  let curLine = 2;
+  let curLine = 0;
   let eventRegions = [];
   for (const block of task.blocks) {
     if (block.actionType === "text") curLine += block.code.split("\n").length;

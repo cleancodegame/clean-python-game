@@ -17,6 +17,8 @@ const App = ({tasks}) => {
   const [terminalMessageColor, setTerminalMessageColor] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [selectedTaskIndex, setSelectedTaskIndex] = useState(0);
+
 
   useEffect(() => {
     handleTaskSelect(0);
@@ -34,6 +36,7 @@ const App = ({tasks}) => {
   }, [disabled, timer]);
 
   const handleTaskSelect = (index) => {
+    setSelectedTaskIndex(index);
     setEventsHappened([]);
     setTaskIndex(index);
     setCompleted(false);
@@ -45,67 +48,54 @@ const App = ({tasks}) => {
   const handleCodeClick = (clickedPosition) => {
     if (disabled) return;
   
-    const task = tasks[taskIndex];
-    // TODO:
-    // run getEventRegions(task, eventsHappened) to get currect set of clickable regions
-    // find the region among them that contains the clickedPosition
-    // add corresponding event to eventsHappened with setEventsHappened(...)
-    // if the event is not found, show an error message in the terminal 
-    //    and increment wrongClickCount 
-    //    and disable the editor for 3 seconds
-    setEventsHappened([...eventsHappened, "uppercase_click"]);
-    return;
-
-
-    // const blockRegex = /## replace[\s\S]*?## with/;
-    // const codeBlockMatch = task.code.join('\n').match(blockRegex);
+    const currentTask = tasks[selectedTaskIndex];
+    const eventRegions = getEventRegions(currentTask, eventsHappened);
+    console.log(eventRegions);
+    const isPositionInRegion = (position, region) => {
+      const { startLine, startColumn, endLine, endColumn } = region;
+      const { lineNumber, column } = position;
   
-    // if (codeBlockMatch) {
-    //   const codeBlock = codeBlockMatch[0];
+      if (lineNumber < startLine || lineNumber > endLine) {
+        return false;
+      }
   
-    //   if (codeBlock.includes(clickedPosition) && task.bugs[clickedPosition]) {
-    //     const newVariableName = task.bugs[clickedPosition];
+      if (lineNumber === startLine && lineNumber === endLine) {
+        return column >= startColumn && column <= endColumn;
+      }
   
-    //     eventsHappened.add(clickedPosition);
-    //     setOfFixedErrors(eventsHappened);
-    //     setRenamed((prev) => ({ ...prev, [clickedPosition]: true }));
+      if (lineNumber === startLine) {
+        return column >= startColumn;
+      }
   
-    //     const newFinalCode = parseCode(task.code);
-    //     setCode(newFinalCode);
+      if (lineNumber === endLine) {
+        return column <= endColumn;
+      }
   
-    //     if (eventsHappened.size === task.number) {
-    //       setCompleted(true);
-    //       setCompletedTasks((prev) => [...prev, selectedTaskIndex]);
-    //       setTerminalMessage('Success: All variables have been renamed!');
-    //       setTerminalMessageColor('green');
-    //       setShowTerminal(true);
-    //     }
-    //   } else {
-    //     setTerminalMessage('Error: You clicked on the wrong place.');
-    //     setTerminalMessageColor('red');
-    //     setShowTerminal(true);
+      return true;
+    };
   
-    //     setWrongClickCount((prev) => prev + 1);
-    //     setDisabled(true);
-    //     setTimer(3);
+    const clickedRegion = eventRegions.find(region => 
+      isPositionInRegion(clickedPosition, region)
+    );
   
-    //     setTimeout(() => {
-    //       setDisabled(false);
-    //       setShowTerminal(false);
-    //     }, 3000);
-    //   }
-    // } else {
-    //   //TODO remove that
-    //   setTerminalMessage('Error: No valid replace block found.');
-    //   setTerminalMessageColor('red');
-    //   setShowTerminal(true);
-    //   setDisabled(true);
+    if (clickedRegion) {
+      const { eventId, actionType } = clickedRegion;
   
-    //   setTimeout(() => {
-    //     setDisabled(false);
-    //     setShowTerminal(false);
-    //   }, 3000);
-    // }
+      
+      setEventsHappened((prev) => new Set([...prev, eventId]));
+    } else {
+      setTerminalMessage('Error: You clicked on the wrong place.');
+      setTerminalMessageColor('yellow');
+      setShowTerminal(true);
+      setDisabled(true);
+      setTimer(3);
+      setWrongClickCount((prev) => prev + 1);
+  
+      setTimeout(() => {
+        setDisabled(false);
+        setShowTerminal(true);
+      }, 3000);
+    }
   };
   
   

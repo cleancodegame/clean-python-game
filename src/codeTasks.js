@@ -107,15 +107,21 @@ export function getEventRegions(task, eventsHappened) {
       }
     }
     else if (block.actionType === "replace-inline" && !eventsHappened.includes(block.eventId)) {
+      // TODO: Fix problems:
+      // 1. curLine is not right for replace-inline regions.
+      // 2. Replace-inline should search for regions in either code or replacementCode depending on list of happendEvents.
+      //    Not just in code.
+      // 3. Some bugs with lineIndex and columnIndex.
+      // 4. lineNumber and columnNumber should start from 1
       for (const anotherBlock of task.blocks) {
         if (anotherBlock.code === undefined) continue;
-        let blockLines = anotherBlock.code.split("\n")
+        let blockLines = anotherBlock.code.split("\n") // Why only code?
         for (const line of blockLines) {
           let i = 0
           while (i + block.code.length <= line.length) {
             if (line.substring(i, i + block.code.length) === block.code) {
               let eventRegion = {
-                startLine: curLine,
+                startLine: curLine, // This is not right.
                 startColumn: i,
                 endLine: curLine,
                 endColumn: i + block.code.length - 1,

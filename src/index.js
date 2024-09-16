@@ -8,7 +8,6 @@ import { formatTask } from "./codeTasks";
 
 export let tasks = [];
 await loadTasksTo(["02.py"], tasks);
-console.log(formatTask(tasks[0], []));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

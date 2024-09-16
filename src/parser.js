@@ -129,6 +129,8 @@ function parsePythonLines(lines) {
       return parseAdd();
     } else if (curLine.startsWith("## explain ")) {
       return parseExplain();
+    } else if (curLine.startsWith("## ")) {
+      throw Error("Unknown block type: " + curLine);
     } else {
       let code = "";
       while (

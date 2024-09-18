@@ -7,7 +7,7 @@ import { loadTasksTo } from "./parser";
 import { formatTask } from "./codeTasks";
 
 export let tasks = [];
-await loadTasksTo(["02.py"], tasks);
+await loadTasksTo(["01.py", "02.py"], tasks);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

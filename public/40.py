@@ -7,7 +7,7 @@ def get_user(username):
     conn = sqlite3.connect('example.db')
     cursor = conn.cursor()
 
-    ##replace
+    ##replace complex
     query = f"SELECT * FROM users WHERE username = '{username}'"
     cursor.execute(query)
     ##with

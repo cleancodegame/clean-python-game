@@ -4,7 +4,7 @@
 age = 25
 
 def is_adult(age):
-## replace
+## replace function
     if age >= 18:
         return True
     else:

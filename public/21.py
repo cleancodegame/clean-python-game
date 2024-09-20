@@ -9,7 +9,7 @@ def quicksort(arr):
     left = [x for x in arr if x < pivot]
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
-## replace
+## replace quicksort
     return left + middle + right
 ## with
     return quicksort(left) + middle + quicksort(right)

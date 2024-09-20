@@ -1,6 +1,6 @@
 ## Task 10
 ## task10.py
-## replace
+## replace PROCESS_TRANSACTION
 def process_transaction(transaction_data):
     if transaction_data["type"] == "withdrawal":
         if transaction_data["amount"] > 0:

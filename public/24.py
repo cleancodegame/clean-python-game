@@ -2,21 +2,21 @@
 ## task24.py
 #Hard
 
-## replace
+## replace calculate_salary
 def calculate_salary(base_salary, bonus, tax_rate, health_insurance, retirement_savings):
     return base_salary + bonus - (base_salary * tax_rate) - health_insurance - retirement_savings
 ## with
 class Employee:
     def __init__(self, name, base_salary, bonus, tax_rate, health_insurance, retirement_savings):
-        ## add 1
+        ## add-on employee
         self.name = name
         ## end
-        ## add 2
+        ## add-on calculate_salary
         self.base_salary = base_salary
         ## end
 ## end
 
-## remove 1
+## remove employee
 employee = {
     'name': 'Alice',
     'base_salary': 50000,
@@ -26,7 +26,7 @@ employee = {
     'retirement_savings': 3000
 }
 ## end
-## remove 2
+## remove calculate_salary
 print(calculate_salary(
     employee['base_salary'], 
     employee['bonus'], 

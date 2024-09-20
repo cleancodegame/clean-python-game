@@ -3,7 +3,7 @@
 #Medium
 
 def fibonacci(n):
-## replace
+## replace fibonacci
     if n == 1 or n == 2:
         return 1
 ## with

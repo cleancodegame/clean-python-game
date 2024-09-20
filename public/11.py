@@ -1,9 +1,7 @@
 ## Task 11
 ## task12.py
-## replace myFunction
+## replace myFunction myFunction
 def myFunction():
     return "Hello, World!"
-## with
-def greet():
-    return "Hello, World!"
+## with greet
 ## end

@@ -25,7 +25,7 @@ function processWithReplaceInline(text, eventsHappened, task) {
       processedText += text[i];
       i += 1;
     }
-  }
+  }                               
   return processedText;
 }
 
@@ -41,7 +41,7 @@ export function formatTask(task, eventsHappened) {
       block.actionType === "remove-on" ||
       block.actionType === "add-on"
     ) {
-      if (eventsHappened.indexOf(block.eventId) >= 0) {
+      if (eventsHappened.includes(block.eventId)) {
         result += processWithReplaceInline(block.replacementCode, eventsHappened, task);
       } else {
         result += processWithReplaceInline(block.code, eventsHappened, task);

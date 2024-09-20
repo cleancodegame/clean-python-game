@@ -2,43 +2,44 @@
 ## task9.py
 # add: Replace the repetitive if-else structure with a more scalable solution using dictionaries.
 def get_product_details(product_id):
-    ## remove
+    ## remove LAPTOP
     if product_id == 1:
         return "Laptop", 1200, "Electronics"
     ## end
-    ## remove
+    ## remove SMARTPHONE
     if product_id == 2:
         return "Smartphone", 800, "Electronics"
     ## end
-    ## remove
+    ## remove TABLET
     elif product_id == 3:
         return "Tablet", 600, "Electronics"
     ## end
+    ## remove HEADPHONES
     if product_id == 4:
         return "Headphones", 150, "Accessories"
     ## end
-    ## remove
+    ## remove CHARGER
     if product_id == 5:
         return "Charger", 20, "Accessories"
     else:
         return "Unknown product", 0, "Unknown category"
     ## end
-    ## add
+    ## add-on NOTHINGFOUND
     return PRODUCTS.get(product_id, ("Unknown product", 0, "Unknown category"))
     ## end
-## add
+## add-on LAPTOP
 PRODUCTS = {
     1: ("Laptop", 1200, "Electronics"),
-    ## add
+    ## add-on SMARTPHONE
     2: ("Smartphone", 800, "Electronics"),
     ## end
-    ## add
+    ## add-on TABLET
     3: ("Tablet", 600, "Electronics"),
     ## end
-    ## add
+    ## add-on HEADPHONES
     4: ("Headphones", 150, "Accessories"),
     ## end
-    ## add
+    ## add-on CHARGER
     5: ("Charger", 20, "Accessories"),
     ## end
 }

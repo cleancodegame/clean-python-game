@@ -5,6 +5,7 @@ import './CodeEditor.css';
 const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
   const [lastIndex, setLastIndex] = useState(0)
   const editorRef = useRef(null);
+  const onMouseUpHandlerRef = useRef(null);
 
   useEffect(() => {
     loader.init().then((monaco) => {
@@ -32,6 +33,26 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     , [levelId]);
 
+  function setMouseUp(){
+    if(onMouseUpHandlerRef.current)
+      onMouseUpHandlerRef.current.dispose();
+    if (editorRef.current) {
+      onMouseUpHandlerRef.current = editorRef.current.onMouseUp((e) => {
+        if (disabled) return;
+  
+        const position = e.target.position;
+        if (!position) {
+          onCodeClick(null);
+          return;
+        }
+        onCodeClick(position);
+      });
+    }
+  }
+
+  setMouseUp();
+
+
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     
@@ -42,17 +63,7 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
     viewLines.classList.add('monaco-mouse-cursor-pointer');
     viewLines.classList.remove('monaco-mouse-cursor-text');
 
-    editor.onMouseUp((e) => {
-      if (disabled) return;
-
-      const position = e.target.position;
-      if (!position) {
-        onCodeClick(null);
-        return;
-      }
-      onCodeClick(position);
-    });
-
+    setMouseUp();
     editor.onDidChangeCursorSelection((e) => {
       if (monaco) {
         editor.setSelection(new monaco.Selection(1, 1, 1, 1));

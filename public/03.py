@@ -1,5 +1,3 @@
-# TODO: Change the tasks name to be more descriptive. Change the code scenario.
-
 ## Task 3
 ## task3.py
 class BankTrasferInterestCalculator:

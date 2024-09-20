@@ -23,7 +23,7 @@ def configure_server(options):
 
 ## remove-on argsClick
 configure_server("localhost", 8080, True, 30, 5, True)
-##end
+## end
 
 ## add-on argsClick
 serverUsedoption = {
@@ -38,5 +38,5 @@ serverUsedoption = {
 configure_server(serverUsedoption)
 ## end
 
-## replace-inline _ serverUsedoption
+## replace-inline name serverUsedoption
 ## with server_options

@@ -4,10 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { loadTasksTo } from "./parser";
-import { formatTask } from "./codeTasks";
 
 export let tasks = [];
-await loadTasksTo(["01.py", "02.py"], tasks);
+await loadTasksTo(["05.py", "06.py"], tasks);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

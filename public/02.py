@@ -1,6 +1,5 @@
 ## Task 2
 ## task2.py
-
 ## replace uppercase_click uppercase
 def transform(s, uppercase):
     bad_variable_name = "..."

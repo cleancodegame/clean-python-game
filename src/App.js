@@ -47,55 +47,56 @@ const App = ({tasks}) => {
 
   const handleCodeClick = (clickedPosition) => {
     if (disabled) return;
-  
-    const currentTask = tasks[selectedTaskIndex];
-    const eventRegions = getEventRegions(currentTask, eventsHappened);
-    console.log(eventRegions);
-    const isPositionInRegion = (position, region) => {
-      const { startLine, startColumn, endLine, endColumn } = region;
-      const { lineNumber, column } = position;
-  
-      if (lineNumber < startLine || lineNumber > endLine) {
-        return false;
-      }
-  
-      if (lineNumber === startLine && lineNumber === endLine) {
-        return column >= startColumn && column <= endColumn;
-      }
-  
-      if (lineNumber === startLine) {
-        return column >= startColumn;
-      }
-  
-      if (lineNumber === endLine) {
-        return column <= endColumn;
-      }
-  
-      return true;
-    };
-  
-    const clickedRegion = eventRegions.find(region => 
-      isPositionInRegion(clickedPosition, region)
-    );
-  
-    if (clickedRegion) {
-      const { eventId, actionType } = clickedRegion;
-  
-      
-      setEventsHappened((prev) => new Set([...prev, eventId]));
-    } else {
-      setTerminalMessage('Error: You clicked on the wrong place.');
-      setTerminalMessageColor('yellow');
-      setShowTerminal(true);
-      setDisabled(true);
-      setTimer(3);
-      setWrongClickCount((prev) => prev + 1);
-  
-      setTimeout(() => {
-        setDisabled(false);
+    console.log(clickedPosition);
+    setEventsHappened((prevEventsHappend) => {
+      const currentTask = tasks[selectedTaskIndex];
+      const eventRegions = getEventRegions(currentTask, prevEventsHappend);
+      console.log(eventRegions);
+      const isPositionInRegion = (position, region) => {
+        const { startLine, startColumn, endLine, endColumn } = region;
+        const { lineNumber, column } = position;
+    
+        if (lineNumber < startLine || lineNumber > endLine) {
+          return false;
+        }
+    
+        if (lineNumber === startLine && lineNumber === endLine) {
+          return column >= startColumn && column <= endColumn;
+        }
+    
+        if (lineNumber === startLine) {
+          return column >= startColumn;
+        }
+    
+        if (lineNumber === endLine) {
+          return column <= endColumn;
+        }
+    
+        return true;
+      };
+    
+      const clickedRegion = eventRegions.find(region => 
+        isPositionInRegion(clickedPosition, region)
+      );
+    
+      if (clickedRegion) {
+        const { eventId, actionType } = clickedRegion;
+        return [...prevEventsHappend, eventId];
+      } else {
+        setTerminalMessage('Error: You clicked on the wrong place.');
+        setTerminalMessageColor('yellow');
         setShowTerminal(true);
-      }, 3000);
-    }
+        setDisabled(true);
+        setTimer(3);
+        setWrongClickCount((prev) => prev + 1);
+    
+        setTimeout(() => {
+          setDisabled(false);
+          setShowTerminal(true);
+        }, 3000);
+        return prevEventsHappend;
+      }
+      });
   };
   
   

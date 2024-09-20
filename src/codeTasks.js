@@ -107,17 +107,34 @@ export function getEventRegions(task, eventsHappened) {
       }
     }
     else if (block.actionType === "replace-inline" && !eventsHappened.includes(block.eventId)) {
+      // TODO: Fix problems:
+      // 1. curLine is not right for replace-inline regions.
+      // 2. Replace-inline should search for regions in either code or replacementCode depending on list of happendEvents.
+      //    Not just in code.
+      // 3. Some bugs with lineIndex and columnIndex.
+      // 4. lineNumber and columnNumber should start from 1
+      let anotherLine = 1
       for (const anotherBlock of task.blocks) {
         if (anotherBlock.code === undefined) continue;
-        let blockLines = anotherBlock.code.split("\n")
+        if (anotherBlock.actionType === "replace-inline") {
+          continue
+        }
+        let blockLines = anotherBlock.code.split("\n") // Why only code?
+        if (eventsHappened.includes(anotherBlock.eventId)) {
+          blockLines = anotherBlock.replacementCode.split("\n")
+        }
         for (const line of blockLines) {
           let i = 0
           while (i + block.code.length <= line.length) {
             if (line.substring(i, i + block.code.length) === block.code) {
+              let startingLine = anotherLine
+              if (Math.round(startingLine) !== startingLine) {
+                startingLine += 0.5
+              }
               let eventRegion = {
-                startLine: curLine,
+                startLine: startingLine, // This is not right.
                 startColumn: i,
-                endLine: curLine,
+                endLine: startingLine,
                 endColumn: i + block.code.length - 1,
                 eventId: block.eventId
               }
@@ -127,6 +144,12 @@ export function getEventRegions(task, eventsHappened) {
             else {
               i += 1
             }
+          }
+          if (line.length === 0) {
+            anotherLine += 0.5
+          }
+          else {
+          anotherLine += 1
           }
         }
       }

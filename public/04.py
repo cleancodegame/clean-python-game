@@ -1,7 +1,8 @@
 ## Task 4
+#TODO
 ## task4.py
 def process_data(data):
-## replace@clean
+## replace cleaned_data
     # Cleaning data
     cleaned_data = []
     for item in data:
@@ -11,7 +12,7 @@ def process_data(data):
     cleaned_data = clean_data(data)
 ## end
 
-## replace # Filtering data
+## replace filtered_data
     # Filtering data
     filtered_data = []
     for item in cleaned_data:
@@ -21,7 +22,7 @@ def process_data(data):
     filtered_data = filter_data(cleaned_data)
 ## end
 
-## replace # Formatting data
+## replace final_data
     # Formatting data
     final_data = []
     for item in filtered_data:
@@ -32,7 +33,7 @@ def process_data(data):
     
     return final_data
 
-## add@clean
+## add-on cleaned_data
 def clean_data(data):
     cleaned_data = []
     for item in data:
@@ -41,7 +42,7 @@ def clean_data(data):
     return cleaned_data
 ## end
 
-## add # Filtering data
+## add-on filtered_data
 def filter_data(cleaned_data):
     filtered_data = []
     for item in cleaned_data:
@@ -49,7 +50,7 @@ def filter_data(cleaned_data):
             filtered_data.append(item)
     return filtered_data
 ## end
-## add # Formatting data
+## add-on final_data
 def format_data(filtered_data):
     final_data = []
     for item in filtered_data:

@@ -121,16 +121,27 @@ export function getEventRegions(task, eventsHappened) {
         }
         let blockLines = anotherBlock.code.split("\n") // Why only code?
         if (eventsHappened.includes(anotherBlock.eventId)) {
+          if (anotherBlock.actionType === "remove" || anotherBlock.actionType === "remove-on") {
+            continue
+          }
           blockLines = anotherBlock.replacementCode.split("\n")
         }
-        for (const line of blockLines) {
+        else {
+        if (anotherBlock.actionType === "add" || anotherBlock.actionType === "add-on") {
+          continue
+        }
+        }
+        let numOfCheckedLines = 0
+        for (const initialLine of blockLines) {
+          let line = processWithReplaceInline(initialLine, eventsHappened, task)
+          console.log(line)
           let i = 0
           while (i + block.code.length <= line.length) {
             if (line.substring(i, i + block.code.length) === block.code) {
               let startingLine = anotherLine
-              if (Math.round(startingLine) !== startingLine) {
+              /*if (Math.round(startingLine) !== startingLine) {
                 startingLine += 0.5
-              }
+              }*/
               let eventRegion = {
                 startLine: startingLine, // This is not right.
                 startColumn: i,
@@ -145,8 +156,9 @@ export function getEventRegions(task, eventsHappened) {
               i += 1
             }
           }
-          if (line.length === 0) {
-            anotherLine += 0.5
+          numOfCheckedLines += 1
+          if (line.length === 0 && numOfCheckedLines === blockLines.length) {
+            anotherLine += 0
           }
           else {
           anotherLine += 1

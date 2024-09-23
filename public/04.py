@@ -1,5 +1,4 @@
 ## Task 4
-#TODO
 ## task4.py
 def process_data(data):
 ## replace cleaned_data

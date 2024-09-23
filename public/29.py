@@ -3,7 +3,7 @@
 #Medium
 
 # The function is too complex. Refactor it to make it simpler.
-## replace
+## replace calculate_final_score
 def calculate_final_score(scores):
     return sum([score * 1.5 if score > 90 else score for score in scores]) / len(scores)
 ## with

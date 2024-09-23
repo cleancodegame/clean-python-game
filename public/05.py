@@ -1,5 +1,6 @@
 ## Task 5
 ## task5.py
+
 ## remove argsClick host, port, use_https, timeout, retries, logging_enabled
 def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     protocol = "https" if use_https else "http"
@@ -10,6 +11,7 @@ def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     else:
         print("Logging is disabled")
 ## end
+
 ## add-on argsClick
 def configure_server(options):
     protocol = "https" if options['use_https'] else "http"

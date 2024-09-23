@@ -3,23 +3,17 @@
 class Animal:
     def speak(self):
         pass
-## replace
 class Dog:
     def speak(self):
         return "Woof!"
-## with
-class Dog(Animal):
-    def speak(self):
-        return "Woof!"
+## replace Dog Dog
+## with Dog(Animal)
 ## end
-## replace
 class Cat:
     def speak(self):
         return "Meow!"
-## with
-class Cat(Animal):
-    def speak(self):
-        return "Meow!"
+## replace Cat Cat
+## with Cat(Animal)
 ## end
 
 dog = Dog()

@@ -4,7 +4,7 @@ def read_file(file_path):
     try:
         with open(file_path, 'r') as file:
             return file.read()
-    ##replace
+    ##replace exception
     except Exception as e:
         return None
     ##with

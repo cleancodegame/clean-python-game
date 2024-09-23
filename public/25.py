@@ -3,7 +3,7 @@
 #Medium
 
 def calculate_bonus(salary, performance):
-    ## replace
+    ## replace performance
     if performance == 'excellent':
         return salary * 0.2
     else:

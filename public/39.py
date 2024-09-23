@@ -4,11 +4,11 @@ import threading
 
 counter = 0
 
-##add
+##add-on counter_lock
 counter_lock = threading.Lock()
 ##end
 
-##replace
+##replace counter_lock
 def increment_counter():
     global counter
     for _ in range(1000):
@@ -19,7 +19,7 @@ def increment_counter():
     for _ in range(1000):
         with counter_lock:
             counter += 1
-
+##end
 thread1 = threading.Thread(target=increment_counter)
 thread2 = threading.Thread(target=increment_counter)
 

@@ -9,7 +9,7 @@ class Database:
         self.logger.log(f"Executing SQL: {sql}")
         return "Query Result"
 #Circular Logger
-##replace
+##replace Logger
 class Logger:
     def __init__(self, database):
         self.database = database

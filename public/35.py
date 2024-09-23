@@ -1,6 +1,6 @@
 ##Task 35
 ##task35.py
-##replace
+##replace save_user_to_db
 def save_user_to_db(user, save_as_admin=False):
     if save_as_admin:
         # Save with admin rights

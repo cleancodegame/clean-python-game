@@ -2,7 +2,7 @@
 ## task18.py
 class ReportGenerator:
     def generate_pdf(self, data):
-        ## replace
+        ## replace generate_pdf
         print("Generating PDF...")
         # Complex PDF generation logic
         print("PDF generated!")
@@ -11,7 +11,7 @@ class ReportGenerator:
         ## end
 
     def generate_csv(self, data):
-        ## replace
+        ## replace generate_csv
         print("Generating CSV...")
         # Complex CSV generation logic
         print("CSV generated!")

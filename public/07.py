@@ -2,7 +2,7 @@
 ## task7.py
 def process_data(data, operation):
     if operation == "sum":
-        ## replace
+        ## replace SUM
         s = 0
         for item in data:
             s += item
@@ -10,8 +10,9 @@ def process_data(data, operation):
         ## with
         return sum(data)
         ## end
+
     elif operation == "avg":
-        ## replace
+        ## replace AVG
         s = 0
         for item in data:
             s += item
@@ -19,8 +20,9 @@ def process_data(data, operation):
         ## with
         return sum(data) / len(data)
         ## end
+        
     elif operation == "max":
-        ## replace
+        ## replace MAX
         max_val = data[0]
         for item in data:
             if item > max_val:

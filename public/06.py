@@ -1,5 +1,6 @@
 ## Task 6
 ## task6.py
+
 import random
 
 ## add-on magic_click

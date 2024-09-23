@@ -7,7 +7,7 @@ class Order:
 
     def calculate_total(self):
         return sum(product['price'] for product in self.products)
-##replace
+##replace print_order
     def print_order(self):
         print(f"Order ID: {self.order_id}")
         for product in self.products:

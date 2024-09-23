@@ -1,4 +1,6 @@
 function processWithReplaceInline(text, eventsHappened, task) {
+  let prevCode = text
+  while (1 > 0) {
   let i = 0;
   let processedText = "";
 
@@ -7,13 +9,13 @@ function processWithReplaceInline(text, eventsHappened, task) {
       && eventsHappened.includes(b.eventId)
   );
 
-  while (i < text.length) {
+  while (i < prevCode.length) {
     let hasReplacement = false;
     for (const inlineReplaceBlock of inlineReplaceBlocks) {
       const pattern = inlineReplaceBlock.code;
       const replacement = inlineReplaceBlock.replacementCode;
-      if (i + pattern.length <= text.length) {
-        if (text.substring(i, i + pattern.length) === pattern) {
+      if (i + pattern.length <= prevCode.length) {
+        if (prevCode.substring(i, i + pattern.length) === pattern) {
           processedText += replacement;
           i += pattern.length;
           hasReplacement = true;
@@ -22,11 +24,16 @@ function processWithReplaceInline(text, eventsHappened, task) {
       }
     }
     if (!hasReplacement) {
-      processedText += text[i];
+      processedText += prevCode[i];
       i += 1;
     }
-  }                               
-  return processedText;
+  }            
+  if (processedText === prevCode) {
+    break
+  }
+  prevCode = processedText;
+}    
+  return prevCode;
 }
 
 export function formatTask(task, eventsHappened) {

@@ -6,9 +6,9 @@ class BankTrasferInterestCalculator:
 
   def long_method_name_two(self, y):
     return y - 1
-## mistake LongMethodNames
-## correct MathOperations
-## mistake long_method_name_one
-## correct increment
-## mistake long_method_name_two
-## correct decrement
+## replace-inline LongMethodNames BankTrasferInterestCalculator
+## with MathOperations
+## replace-inline long_method_name_one long_method_name_one
+## with increment
+## replace-inline long_method_name_two long_method_name_two
+## with decrement

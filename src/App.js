@@ -127,7 +127,7 @@ const App = ({tasks}) => {
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
-            <span>{tasks[taskIndex].fileName}</span>
+            <span>{tasks[taskIndex].filename}</span>
           </div>
         </div>
 

@@ -41,6 +41,7 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
         if (disabled) return;
   
         const position = e.target.position;
+        console.log("click event:", e);
         if (!position) {
           onCodeClick(null);
           return;
@@ -74,6 +75,7 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
   const options = {
     readOnly: true,
     renderLineHighlight: 'none',
+    scrollBeyondLastLine: false,
     selectOnLineNumbers: false,
     occurrencesHighlight: false,
     matchBrackets: false,
@@ -81,7 +83,6 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
     scrollbar: { vertical: 'hidden', horizontal: 'hidden', },
   };
 
-  // TODO: Remove ugly vertical scrollbar
   return (
     <div className={`code-editor ${disabled ? 'disabled' : ''}`}>
       <MonacoEditor

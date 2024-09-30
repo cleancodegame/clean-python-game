@@ -1,4 +1,4 @@
-function parsePythonLines(lines) {
+export function parsePyLevel(lines) {
   let currentLine = 0;
   function parseUntilLine(endLine) {
     let code = "";
@@ -173,14 +173,15 @@ async function readFileLines(fileName) {
   return data.split(RegExp("\\r?\\n"));
 }
 
-async function loadTask(fileName) {
+async function loadLevel(fileName) {
   let lines = await readFileLines(fileName);
-  return parsePythonLines(lines);
+  return parsePyLevel(lines);
 }
 
-export async function loadTasksTo(fileNames, tasks) {
+export async function loadLevelsTo(fileNames, tasks) {
   for (const curFile of fileNames) {
-    let task = await loadTask(curFile);
+    let task = await loadLevel(curFile);
     tasks.push(task);
   }
 }
+

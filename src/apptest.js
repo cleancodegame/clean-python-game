@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import App from './App'; // Importing your App component
+import App from './App.mjs'; // Importing your App component
 
 describe('App Component', () => {
   test('renders the App component correctly', () => {

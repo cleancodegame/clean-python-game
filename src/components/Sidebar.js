@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import image from '../images/image.png'
+import './Sidebar.css';
 
 const Sidebar = ({ tasks, onSelectTask }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -7,6 +8,41 @@ const Sidebar = ({ tasks, onSelectTask }) => {
   const toggleFolder = () => {
     setIsOpen(!isOpen);
   };
+
+  function renderLevelItem(task, index) {
+    return (
+      <li
+        key={index}
+        className={task.completed ? 'completed-level' : 'incompleted-level'}
+        onClick={() => onSelectTask(index)}
+      >
+        {task.title}
+      </li>
+    );
+  }
+
+  function renderFolders(dirs) {
+    return Object.keys(dirs).map((dirName, index) => {
+      return (
+        <ul key={index}>
+          <li className="folder" onClick={toggleFolder}>
+            <span className={`folder-icon ${isOpen ? 'open' : ''}`}>v</span>  {dirName}
+          </li>
+          {isOpen && (
+            <ul className="task-list">
+              {dirs[dirName].map((task, index) => renderLevelItem(task, index))}
+            </ul>
+          )}
+        </ul>
+      );
+    });
+  }
+
+  
+  
+  const dirs = Object.groupBy(tasks, lvl => lvl.dirName);
+
+
   
   return (
       <div className={`sidebar ${isMobileView}`}>
@@ -14,23 +50,7 @@ const Sidebar = ({ tasks, onSelectTask }) => {
           <img src={image} alt="Logo" />
           Clean Code Game
         </h2>
-        <ul>
-          <li className="folder" onClick={toggleFolder}>
-            <span className={`folder-icon ${isOpen ? 'open' : ''}`}>v</span>  Tasks
-          </li>
-          {isOpen && (
-            <ul className="task-list">
-              {tasks.map((task, index) => (
-                <li
-                  key={index}
-                  className={task.completed ? 'completed' : ''}
-                >
-                  {task.title}
-                </li>
-              ))}
-            </ul>
-          )}
-        </ul>
+        {renderFolders(dirs)}
       </div>
   );
 };

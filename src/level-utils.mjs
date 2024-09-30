@@ -1,3 +1,18 @@
+function isMatch(text, startIndex, pattern) {
+  for (let i = 0; i < pattern.length; i++) {
+    if (text[startIndex + i] !== pattern[i]) {
+      return false;
+    }
+  }
+  if (startIndex > 0 && text[startIndex - 1].match(/[a-zA-Z0-9_']/)) {
+    return false;
+  }
+  if (startIndex+pattern.length < text.length && text[startIndex + pattern.length].match(/[a-zA-Z0-9_']/)) {
+    return false;
+  }
+  return true;
+}
+
 function processWithReplaceInline(text, eventsHappened, task) {
   let prevCode = text
   while (1 > 0) {
@@ -15,7 +30,7 @@ function processWithReplaceInline(text, eventsHappened, task) {
       const pattern = inlineReplaceBlock.code;
       const replacement = inlineReplaceBlock.replacementCode;
       if (i + pattern.length <= prevCode.length) {
-        if (prevCode.substring(i, i + pattern.length) === pattern) {
+        if (isMatch(prevCode, i, pattern)) {
           processedText += replacement;
           i += pattern.length;
           hasReplacement = true;
@@ -92,7 +107,7 @@ export function getEventRegions(task, eventsHappened) {
           for (const line of blockLines) {
             let i = 0
             while (i + block.substring.length <= line.length) {
-              if (line.substring(i, i + block.substring.length) === block.substring) {
+              if (isMatch(line, i, block.substring)) {
                 let eventRegion = {
                   startLine: curLine,
                   startColumn: i + 1,
@@ -143,13 +158,10 @@ export function getEventRegions(task, eventsHappened) {
           console.log(line)
           let i = 0
           while (i + block.code.length <= line.length) {
-            if (line.substring(i, i + block.code.length) === block.code) {
+            if (isMatch(line, i, block.code)) {
               let startingLine = anotherLine
-              /*if (Math.round(startingLine) !== startingLine) {
-                startingLine += 0.5
-              }*/
               let eventRegion = {
-                startLine: startingLine, // This is not right.
+                startLine: startingLine,
                 startColumn: i + 1,
                 endLine: startingLine,
                 endColumn: i + 1 + block.code.length,
@@ -167,7 +179,7 @@ export function getEventRegions(task, eventsHappened) {
             anotherLine += 0
           }
           else {
-          anotherLine += 1
+            anotherLine += 1
           }
         }
       }

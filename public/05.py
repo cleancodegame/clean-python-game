@@ -1,5 +1,5 @@
-## Task 5
-## task5.py
+## Task 4
+## task4.py
 ## remove argsClick host, port, use_https, timeout, retries, logging_enabled
 def configure_server(host, port, use_https, timeout, retries, logging_enabled):
     protocol = "https" if use_https else "http"
@@ -37,6 +37,5 @@ serverUsedoption = {
 
 configure_server(serverUsedoption)
 ## end
-
 ## replace-inline name serverUsedoption
 ## with server_options

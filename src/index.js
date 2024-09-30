@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { loadTasksTo } from "./parser";
 
 export let tasks = [];
-await loadTasksTo(["05.py", "06.py"], tasks);
+await loadTasksTo(["01.py", "02.py", "03.py", "05.py", "06.py"], tasks);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

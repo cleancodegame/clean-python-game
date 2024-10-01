@@ -82,7 +82,7 @@ export function getEventRegions(task, eventsHappened) {
   let curLine = 1;
   let eventRegions = [];
   for (const block of task.blocks) {
-    if (block.actionType === "text") curLine += block.code.split("\n").length;
+    if (block.actionType === "text") curLine += block.code.split("\n").length - 1;
     else if (block.actionType === "replace" || block.actionType === "remove" 
       || block.actionType === "add") {
       //let code = processWithReplaceInline(block.code, eventsHappened, task);

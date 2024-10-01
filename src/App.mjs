@@ -132,7 +132,7 @@ const App = ({tasks}) => {
       <div className="content">
         <div className="header-bar">
           <div className="file-tab">
-            <span>{tasks[taskIndex].filename}</span>
+            <span title={tasks[taskIndex].timestamp}>{tasks[taskIndex].filename}</span>
           </div>
         </div>
 

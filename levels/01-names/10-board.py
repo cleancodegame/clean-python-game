@@ -1,13 +1,12 @@
 ## Verbs
 ## chess.py
 # It is simple: 
-# 'initialization' consists of 'creating a board' and 'using a parser'!
+# 'initialization' consists of 'creating a board' and filling it with the 'board_reader'!
 
 def initialization(board_json):
     n = board_json['size']
     board = creating_board(n, n)
-    parser(json, board)
-
+    board_reader(json, board)
 ## add-on $initialization
 # Hint for the future: functions = verbs, variables = nouns.
 ## end
@@ -17,6 +16,6 @@ def initialization(board_json):
 ## with initialize_board
 ## replace-inline $creating_board creating_board
 ## with create_board
-## replace-inline $parser parser
-## with parse_board
+## replace-inline $board_reader board_reader
+## with read_board
 

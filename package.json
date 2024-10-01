@@ -20,7 +20,7 @@
   "scripts": {
     "toc": "node ./src/toc-gen.mjs public/levels src/levels-data.mjs",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run toc & react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

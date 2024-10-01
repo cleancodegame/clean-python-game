@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import MonacoEditor, { loader } from '@monaco-editor/react';
-import './CodeEditor.css';
+import React, { useEffect, useState, useRef } from "react";
+import MonacoEditor, { loader } from "@monaco-editor/react";
+import "./CodeEditor.css";
 
 const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
-  const [lastIndex, setLastIndex] = useState(0)
+  const [lastIndex, setLastIndex] = useState(0);
   const editorRef = useRef(null);
   const onMouseUpHandlerRef = useRef(null);
 
@@ -13,8 +13,9 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
     });
   }, []);
 
-  useEffect(() => {
-    setLastIndex(0)
+  useEffect(
+    () => {
+      setLastIndex(0);
       const interval = setInterval(() => {
         setLastIndex((li) => {
           if (li >= code.length) {
@@ -22,24 +23,24 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
             clearInterval(interval);
             return 10000000;
           }
-          return li + 3
-        })
+          return li + 3;
+        });
       }, 10); // Adjust timing as needed
 
       return () => {
         clearInterval(interval);
       };
-    }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    , [levelId]);
+    [levelId]
+  );
 
-  function setMouseUp(){
-    if(onMouseUpHandlerRef.current)
-      onMouseUpHandlerRef.current.dispose();
+  function setMouseUp() {
+    if (onMouseUpHandlerRef.current) onMouseUpHandlerRef.current.dispose();
     if (editorRef.current) {
       onMouseUpHandlerRef.current = editorRef.current.onMouseUp((e) => {
         if (disabled) return;
-  
+
         const position = e.target.position;
         console.log("click event:", e);
         if (!position) {
@@ -53,16 +54,15 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
 
   setMouseUp();
 
-
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
-    
+
     // set a pointer as a mouse cursor (no editor API for this)
     // mouseStyle option has only 'copy' value, but not 'pointer'
     const editorDom = editorRef.current.getDomNode();
-    const viewLines = editorDom.querySelector('.view-lines');
-    viewLines.classList.add('monaco-mouse-cursor-pointer');
-    viewLines.classList.remove('monaco-mouse-cursor-text');
+    const viewLines = editorDom.querySelector(".view-lines");
+    viewLines.classList.add("monaco-mouse-cursor-pointer");
+    viewLines.classList.remove("monaco-mouse-cursor-text");
 
     setMouseUp();
     editor.onDidChangeCursorSelection((e) => {
@@ -74,17 +74,17 @@ const CodeEditor = ({ code, onCodeClick, disabled, levelId }) => {
 
   const options = {
     readOnly: true,
-    renderLineHighlight: 'none',
+    renderLineHighlight: "none",
     scrollBeyondLastLine: false,
     selectOnLineNumbers: false,
     occurrencesHighlight: false,
     matchBrackets: false,
-    minimap: { enabled: false, },
-    scrollbar: { vertical: 'hidden', horizontal: 'hidden', },
+    minimap: { enabled: false },
+    scrollbar: { vertical: "hidden", horizontal: "hidden" },
   };
 
   return (
-    <div className={`code-editor ${disabled ? 'disabled' : ''}`}>
+    <div className={`code-editor ${disabled ? "disabled" : ""}`}>
       <MonacoEditor
         theme="vs-dark"
         height="90vh"

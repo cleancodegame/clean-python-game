@@ -1,7 +1,7 @@
-import { parsePyLevel } from './parser.mjs'; // Assuming the parser is in 'parser.js'
+import { parsePyLevel } from "./parser.mjs"; // Assuming the parser is in 'parser.js'
 
-describe('parsePyLevel function', () => {
-  test('parses a basic replace-on block', () => {
+describe("parsePyLevel function", () => {
+  test("parses a basic replace-on block", () => {
     const lines = [
       "## replace-on event-1",
       "def oldFunc():",
@@ -9,7 +9,7 @@ describe('parsePyLevel function', () => {
       "## with",
       "def newFunc():",
       "    return newValue",
-      "## end"
+      "## end",
     ];
 
     const result = parsePyLevel(lines);
@@ -19,10 +19,8 @@ describe('parsePyLevel function', () => {
     expect(result.blocks[0].replacementCode).toContain("def newFunc()");
   });
 
-  test('parses an explain block', () => {
-    const lines = [
-      "## explain event-1 The function is outdated",
-    ];
+  test("parses an explain block", () => {
+    const lines = ["## explain event-1 The function is outdated"];
 
     const result = parsePyLevel(lines);
     expect(result.blocks[0].actionType).toBe("explain");
@@ -30,7 +28,7 @@ describe('parsePyLevel function', () => {
     expect(result.blocks[0].explanation).toBe("The function is outdated");
   });
 
-  test('handles mixed blocks of code and instructions', () => {
+  test("handles mixed blocks of code and instructions", () => {
     const lines = [
       "## replace-on event-1",
       "def oldFunc():",
@@ -38,7 +36,7 @@ describe('parsePyLevel function', () => {
       "def newFunc():",
       "## end",
       "print('Hello, world!')",
-      "## explain event-2 This is a simple print statement"
+      "## explain event-2 This is a simple print statement",
     ];
 
     const result = parsePyLevel(lines);

@@ -1,9 +1,9 @@
-@import '~prismjs/themes/prism-tomorrow.css';
+@import "~prismjs/themes/prism-tomorrow.css";
 
 .code-editor {
   background-color: #1e1e1e;
   color: #d4d4d4;
-  font-family: 'Cascadia Code', 'Courier New', Courier, monospace;
+  font-family: "Cascadia Code", "Courier New", Courier, monospace;
   padding: 20px;
   white-space: pre-wrap;
   line-height: 1.6;

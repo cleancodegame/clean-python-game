@@ -1,15 +1,15 @@
-import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import App from './App.mjs'; // Importing your App component
+import React from "react";
+import { render, fireEvent, screen } from "@testing-library/react";
+import App from "./App.mjs"; // Importing your App component
 
-describe('App Component', () => {
-  test('renders the App component correctly', () => {
+describe("App Component", () => {
+  test("renders the App component correctly", () => {
     render(<App />);
     const taskTitle = screen.getByText(/Task 1/); // Checks if Task 1 is displayed
     expect(taskTitle).toBeInTheDocument();
   });
 
-  test('selecting a task updates the code', () => {
+  test("selecting a task updates the code", () => {
     render(<App />);
     const taskTitle = screen.getByText(/Task 1/);
     fireEvent.click(taskTitle);
@@ -18,7 +18,7 @@ describe('App Component', () => {
     expect(codeSnippet).toBeInTheDocument();
   });
 
-  test('variable renaming triggers code updates', () => {
+  test("variable renaming triggers code updates", () => {
     render(<App />);
     const variable = screen.getByText(/x/); // Assuming "x" is one of the variables to rename
     fireEvent.click(variable);
@@ -27,12 +27,14 @@ describe('App Component', () => {
     expect(screen.getByText(/posX/)).toBeInTheDocument();
   });
 
-  test('terminal shows success message when task is completed', () => {
+  test("terminal shows success message when task is completed", () => {
     render(<App />);
     const variable = screen.getByText(/x/);
     fireEvent.click(variable); // Simulate renaming
 
-    const successMessage = screen.getByText(/Success: All variables have been renamed!/);
+    const successMessage = screen.getByText(
+      /Success: All variables have been renamed!/
+    );
     expect(successMessage).toBeInTheDocument();
   });
 });

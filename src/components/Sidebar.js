@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import image from '../images/image.png'
-import './Sidebar.css';
+import React, { useState } from "react";
+import image from "../images/image.png";
+import "./Sidebar.css";
 
 const Sidebar = ({ tasks, onSelectTask }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -13,7 +13,7 @@ const Sidebar = ({ tasks, onSelectTask }) => {
     return (
       <li
         key={index}
-        className={task.completed ? 'completed-level' : 'incompleted-level'}
+        className={task.completed ? "completed-level" : "incompleted-level"}
         onClick={() => onSelectTask(index)}
       >
         {task.title}
@@ -26,7 +26,8 @@ const Sidebar = ({ tasks, onSelectTask }) => {
       return (
         <ul key={index}>
           <li className="folder" onClick={toggleFolder}>
-            <span className={`folder-icon ${isOpen ? 'open' : ''}`}>v</span>  {dirName}
+            <span className={`folder-icon ${isOpen ? "open" : ""}`}>v</span>{" "}
+            {dirName}
           </li>
           {isOpen && (
             <ul className="task-list">
@@ -38,20 +39,16 @@ const Sidebar = ({ tasks, onSelectTask }) => {
     });
   }
 
-  
-  
-  const dirs = Object.groupBy(tasks, lvl => lvl.dirName);
+  const dirs = Object.groupBy(tasks, (lvl) => lvl.dirName);
 
-
-  
   return (
-      <div className={`sidebar ${isMobileView}`}>
-        <h2>
-          <img src={image} alt="Logo" />
-          Clean Code Game
-        </h2>
-        {renderFolders(dirs)}
-      </div>
+    <div className={`sidebar ${isMobileView}`}>
+      <h2>
+        <img src={image} alt="Logo" />
+        Clean Code Game
+      </h2>
+      {renderFolders(dirs)}
+    </div>
   );
 };
 

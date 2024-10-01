@@ -6,8 +6,7 @@ export function parsePyLevel(lines) {
       code += lines[currentLine] + "\n";
       currentLine++;
     }
-    if (currentLine < lines.length)
-      currentLine++; // skip the endLine
+    if (currentLine < lines.length) currentLine++; // skip the endLine
     return code;
   }
 
@@ -24,9 +23,11 @@ export function parsePyLevel(lines) {
     // ## end
     let instructionName = lines[currentLine].split(" ")[1];
     let replaceArgs = parseInstruction("## " + instructionName, 2);
-    if (instructionName === "replace-on"){
+    if (instructionName === "replace-on") {
       if (replaceArgs.length !== 1)
-        throw Error("Expected 1 argument for replace-on, got " + replaceArgs.length);
+        throw Error(
+          "Expected 1 argument for replace-on, got " + replaceArgs.length
+        );
     }
     let initialCode = parseUntilLine("## with");
     let finalCode = parseUntilLine("## end");
@@ -40,28 +41,28 @@ export function parsePyLevel(lines) {
   }
 
   function parseRemove() {
-    let instructionName = lines[currentLine].split(" ")[1]
-    let replaceArgs = parseInstruction("## " + instructionName, 2)
-    let initialCode = parseUntilLine("## end")
+    let instructionName = lines[currentLine].split(" ")[1];
+    let replaceArgs = parseInstruction("## " + instructionName, 2);
+    let initialCode = parseUntilLine("## end");
     return {
       actionType: instructionName,
       eventId: replaceArgs[0],
       substring: replaceArgs[1],
       code: initialCode,
-      replacementCode: ""
-    }
+      replacementCode: "",
+    };
   }
   function parseAdd() {
     let instructionName = lines[currentLine].split(" ")[1];
     let replaceArgs = parseInstruction("## " + instructionName, 1);
-    let addedCode = parseUntilLine("## end")
+    let addedCode = parseUntilLine("## end");
     return {
       actionType: instructionName,
       eventId: replaceArgs[0],
       substring: undefined,
       code: "",
-      replacementCode: addedCode
-    }
+      replacementCode: addedCode,
+    };
   }
 
   function parseInstruction(instruction, argsCount) {
@@ -73,9 +74,9 @@ export function parsePyLevel(lines) {
     currentLine++;
     let argsLine = line.slice(instruction.length + 1);
     let args = [];
-    for (let i = 0; i < argsCount-1; i++) {
+    for (let i = 0; i < argsCount - 1; i++) {
       let spaceIndex = argsLine.indexOf(" ");
-      if (spaceIndex === -1){
+      if (spaceIndex === -1) {
         break;
       }
       args.push(argsLine.slice(0, spaceIndex));
@@ -91,7 +92,7 @@ export function parsePyLevel(lines) {
     return {
       actionType: "explain",
       eventId: args[0],
-      explanation: args[1]
+      explanation: args[1],
     };
   }
 
@@ -184,4 +185,3 @@ export async function loadLevelsTo(fileNames, tasks) {
     tasks.push(task);
   }
 }
-

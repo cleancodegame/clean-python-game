@@ -56,13 +56,13 @@ export let levels =
   },
   {
     "dirName": "01-names",
-    "timestamp": "2024-10-01T09:18:54.878Z",
+    "timestamp": "2024-10-01T19:10:58.197Z",
     "title": "Meaningful",
     "filename": "cells.py",
     "blocks": [
       {
         "actionType": "text",
-        "code": "# Nice work! After your fixes code becomes much more readable.\n# And this piece of code is realy short and simple.\n# Not sure if it needs any changes.\n\ndef get(lst):\n    lst1 = []\n    for c in lst:\n        if c.IsEmpty:\n            lst1.Add(c.position)\n    return lst1\n\nlst = readfile(\"data.txt\")\nprint(get(lst))\n\n"
+        "code": "# Nice work! After your fixes code becomes much more readable.\n# And this piece of code is realy short and simple.\n# Not sure if it needs any changes.\n\ndef get(lst):\n    lst1 = []\n    for c in lst:\n        if c.is_empty:\n            lst1.Add(c.position)\n    return lst1\n\nlst = read_cells(\"cells.csv\")\nprint(get(lst))\n\n"
       },
       {
         "actionType": "replace-inline",

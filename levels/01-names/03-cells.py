@@ -7,11 +7,11 @@
 def get(lst):
     lst1 = []
     for c in lst:
-        if c.IsEmpty: 
+        if c.is_empty: 
             lst1.Add(c.position)
     return lst1
 
-lst = readfile("data.txt")
+lst = read_cells("cells.csv")
 print(get(lst))
 
 ## replace-inline $get get

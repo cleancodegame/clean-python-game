@@ -18,11 +18,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "toc": "node ./src/toc-gen.mjs public/levels src/levels-data.mjs",
+    "toc": "node ./src/toc-gen.mjs ./levels ./src/levels-data.mjs",
     "start": "react-scripts start",
     "build": "npm run toc & react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -r git@github.com:cleanpygame/cleanpygame.github.io.git -b main -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }

@@ -2,6 +2,7 @@ export let levels =
 [
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.877Z",
     "title": "Onboarding",
     "filename": "hello.py",
     "blocks": [
@@ -19,6 +20,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.878Z",
     "title": "Understandable",
     "filename": "fmt_temp.py",
     "blocks": [
@@ -54,6 +56,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.878Z",
     "title": "Meaningful",
     "filename": "cells.py",
     "blocks": [
@@ -93,6 +96,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.879Z",
     "title": "Magic numbers",
     "filename": "date.py",
     "blocks": [
@@ -136,6 +140,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.882Z",
     "title": "Confusing",
     "filename": "search.py",
     "blocks": [
@@ -169,6 +174,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.899Z",
     "title": "Flag",
     "filename": "unescape.py",
     "blocks": [
@@ -208,6 +214,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.899Z",
     "title": "Flags",
     "filename": "discounts.py",
     "blocks": [
@@ -235,6 +242,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.900Z",
     "title": "Naming styles",
     "filename": "bigrams.py",
     "blocks": [
@@ -282,6 +290,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.902Z",
     "title": "Docstring",
     "filename": "copy.py",
     "blocks": [
@@ -337,12 +346,13 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.903Z",
     "title": "Verbs",
     "filename": "chess.py",
     "blocks": [
       {
         "actionType": "text",
-        "code": "# It is simple:\n# 'initialization' consists of 'creating a board' and 'using a parser'!\n\ndef initialization(board_json):\n    n = board_json['size']\n    board = creating_board(n, n)\n    parser(json, board)\n\n"
+        "code": "# It is simple:\n# 'initialization' consists of 'creating a board' and filling it with the 'board_reader'!\n\ndef initialization(board_json):\n    n = board_json['size']\n    board = creating_board(n, n)\n    board_reader(json, board)\n"
       },
       {
         "actionType": "add-on",
@@ -370,9 +380,9 @@ export let levels =
       },
       {
         "actionType": "replace-inline",
-        "eventId": "$parser",
-        "code": "parser",
-        "replacementCode": "parse_board"
+        "eventId": "$board_reader",
+        "code": "board_reader",
+        "replacementCode": "read_board"
       },
       {
         "actionType": "text",
@@ -382,6 +392,7 @@ export let levels =
   },
   {
     "dirName": "01-names",
+    "timestamp": "2024-10-01T09:18:54.903Z",
     "title": "Practice",
     "filename": "parser.py",
     "blocks": [
